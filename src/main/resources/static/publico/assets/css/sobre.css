@@ -1,0 +1,107 @@
+@import url(header.css);
+@import url(footer.css);
+@import url(../../style.css);
+
+main {
+  background-color: var(--primary-color);
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+main.loaded {
+  opacity: 1;
+}
+/* Sobre */
+section.sobre {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1600px;
+  width: 100%;
+  margin: auto;
+}
+.vpc-title {
+  display: flex;
+  margin: 2em 10vh;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 80px;
+}
+
+.vpc-title h1 {
+  font-size: 3em;
+  background: linear-gradient(90deg, #f3db01, var(--secondary-text-color));
+  background-size: 500% 50%;
+  animation: degrade 5s linear infinite alternate-reverse;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-style: italic;
+  font-weight: 900;
+  color: var(--primary-color);
+}
+@keyframes degrade {
+  0% {
+    background-position: 0%;
+  }
+  100% {
+    background-position: 100%;
+  }
+}
+
+/* Sobre conteudo */
+.sobre-conteudo {
+  display: flex;
+  flex-direction: column;
+  margin: 5em 10vh;
+  width: 100%;
+  max-width: 1800px;
+  height: 100%;
+  color: var(--secondary-text-color);
+}
+.sobre-conteudo h2 {
+  font-size: 2.2em;
+  margin-bottom: 15px;
+  color: var(--primary-text-color);
+  text-align: start;
+}
+
+.sobre-conteudo p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  margin: 10px 0;
+  color: #3b3b3b;
+  text-align: justify;
+}
+
+/* Estilos para dispositivos menores */
+
+@media (max-width: 768px) {
+  .sobre-conteudo h2 {
+    font-size: 1.8em;
+  }
+  .vpc-title {
+    margin: 2em 5vh;
+  }
+  .sobre-conteudo {
+    margin: 2em 5vh;
+  }
+
+  .sobre-conteudo p {
+    font-size: 1em;
+  }
+}
+
+/* Estilos para dispositivos muito pequenos */
+@media (max-width: 480px) {
+  .sobre-conteudo h2 {
+    font-size: 1.5em;
+  }
+
+  .vpc-title h1 {
+    font-size: 2.5em;
+    margin-top: 20px;
+  }
+
+  .sobre-conteudo p {
+    font-size: 0.9em;
+  }
+}

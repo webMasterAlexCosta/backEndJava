@@ -1,0 +1,168 @@
+/* Estilos Gerais */
+@import url(header.css);
+@import url(footer.css);
+@import url(../../style.css);
+
+.registro-formulario {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background: var(--primary-color);
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.registro-formulario h2 {
+  margin-bottom: 20px;
+  font-size: 28px;
+  color: var(--secondary-text-color);
+  text-align: center;
+}
+
+.registro-formulario label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: var(--secondary-text-color);
+}
+.input-erro {
+  border: 2px solid red;
+}
+
+input.focado,
+textarea.focado {
+  border-color: #4ef905;
+  box-shadow: 0 0 0 0.3rem #45fd02;
+  border-width: 2px;
+  border-style: solid;
+}
+
+.registro-formulario input[type="text"],
+.registro-formulario input[type="email"],
+.registro-formulario input[type="password"],
+.registro-formulario input[type="date"],
+.registro-formulario input[type="numero"],
+.registro-formulario textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  box-sizing: border-box; /* Garante que o padding e border sejam incluídos na largura total */
+}
+
+.registro-formulario textarea {
+  resize: vertical;
+}
+
+.registro-formulario .form-group {
+  margin-bottom: 20px;
+}
+
+.registro-formulario .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.registro-formulario .form-group input,
+.registro-formulario .form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.registro-formulario button {
+  padding: 12px 20px;
+  background: var(--hover-color);
+  color: var(--primary-color);
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.registro-formulario button:hover {
+  background: #5a7bf1;
+  transform: translateY(-2px);
+}
+#politicas {
+  flex-wrap: wrap;
+  margin-top: 5px;
+  display: none;
+  overflow-y: scroll;
+  height: auto;
+  min-width: auto !important;
+  max-height: 150px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  resize: vertical;
+  box-shadow: 0 0 0.3125rem #743711;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 0.9rem;
+  resize: none;
+  outline: none;
+  border: none;
+}
+
+@media (max-width: 768px) {
+  .registro-formulario {
+    padding: 15px;
+  }
+
+  .registro-formulario h2 {
+    font-size: 24px;
+  }
+
+  .registro-formulario label {
+    font-size: 14px;
+  }
+
+  .registro-formulario input,
+  .registro-formulario textarea {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .registro-formulario button {
+    padding: 10px 15px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .registro-formulario {
+    padding: 10px;
+  }
+
+  .registro-formulario h2 {
+    font-size: 20px;
+  }
+
+  .registro-formulario label {
+    font-size: 12px;
+  }
+
+  .registro-formulario input,
+  .registro-formulario textarea {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .registro-formulario button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}

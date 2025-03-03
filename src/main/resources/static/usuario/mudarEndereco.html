@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alteração de Endereço</title>
+    <link rel="stylesheet" href="./css/mudarCadastro.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<div class="container">
+    <h2>Alteração de Endereço</h2>
+    <form>
+        <label for="cep">CEP:</label>
+        <input type="text" id="cep" name="cep" required onblur="buscarEndereco()">
+
+
+        <label for="logradouro">Logradouro:</label>
+        <input type="text" id="logradouro" name="logradouro" required>
+
+        <label for="numero">Número:</label>
+        <input type="number" id="numero" name="numero" required>
+
+        <label for="complemento">Complemento:</label>
+        <input type="text" id="complemento" name="complemento">
+
+        <label for="bairro">Bairro:</label>
+        <input type="text" id="bairro" name="bairro" required>
+
+        <label for="cidade">Cidade:</label>
+        <input type="text" id="cidade" name="cidade" required>
+
+        <label for="estado">Estado:</label>
+        <input type="text" id="estado" name="estado" required>
+
+        <input type="submit" value="Atualizar Endereço">
+        <button type="button" onclick="window.history.back()">Voltar</button>
+
+    </form>
+</div>
+<script src="../publico/assets/js/libra.js"></script>
+<script src="js/mudarEndereco.js"></script>
+
+</body>
+</html>

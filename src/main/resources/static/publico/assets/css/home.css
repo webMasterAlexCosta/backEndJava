@@ -1,0 +1,421 @@
+@import url(header.css);
+@import url(footer.css);
+
+/**** MAIN ****/
+
+body{
+  min-height: 100vh;
+}
+main{
+  min-height: 70vh;
+}
+
+@media screen and (max-width: 700px) {
+  main {
+    margin-top: 10vh;
+  }
+}
+/* ********* */
+
+
+/** Slider de imagens **/
+.hero {
+    width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.carousel-container {
+    position: relative;
+    max-height: 600px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.carousel {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item {
+    min-width: 100%;
+    overflow: hidden;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: auto;
+    max-height: 600px;
+    display: block;
+}
+
+/* Botões de avançar e retornar */
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: var(--primary-color);
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.carousel-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.carousel-button.prev {
+    left: 10px;
+}
+
+.carousel-button.next {
+    right: 10px;
+}
+/* Fim dos botoes de avançar e retornar */
+
+/** Fim Slider **/
+
+/* Icon Boxes */
+.fundo-slider-icon{
+  width: 100%;
+  background-color: var(--primary-color);
+  margin: 5px 0;
+  overflow: hidden;
+  position: relative;
+  user-select: none; 
+  -webkit-user-select: none; /* Para Safari */
+  -moz-user-select: none; /* Para Firefox */
+}
+.fundo-slider-icon:before,
+.fundo-slider-icon:after{
+  position: absolute;
+  top: 0%;
+  width: 80px;
+  height: 100%;
+  content: "";
+  z-index: 2;
+}
+.fundo-slider-icon:before{
+  left: 0;
+  background: linear-gradient(to left, rgba(255, 255, 255, 0), white);
+}
+.fundo-slider-icon:after{
+  right: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), white);
+}
+.icon-container {
+  display: inline-block; 
+  animation: 20s slide infinite linear; 
+  justify-content: space-around;
+  align-items: center;
+  background-color: var(--primary-color);
+  white-space: nowrap;
+}
+
+.icon-container:hover{
+  animation-play-state: paused;
+}
+
+.icon-item {
+  display: inline-block; 
+  margin: 0 100px;
+  padding: 24px;
+  font-size: 20px;  
+}
+
+.icon-item i {
+  font-size: 24px; 
+  margin: 0 10px; 
+}
+
+@keyframes slide {
+  from {
+      transform: translateX(0%);
+  }
+  to {
+      transform: translateX(-50%); 
+  }
+}
+
+@media (max-width: 1000px) {
+  .icon-item {
+      flex: 1 0 45%; 
+      justify-content: center;
+  }
+}
+/* Fim icons */
+
+/*** Produtos ***/
+
+.titulos-produtos {
+  display: flex;
+  height: auto;
+  width: 100%;
+  align-items: center;
+  margin: 20px 0;
+  color: var(--primary-color);
+  user-select: none; /*impede que o usuario selecione o texto*/
+  -webkit-user-select: none; /* Para Safari */
+  -moz-user-select: none; /* Para Firefox */
+}
+
+.titulos-produtos h1 {
+  font-size: 2rem;
+  
+  width: 400px;
+  text-align: end;
+  color: var(--primary-color);
+  padding: 1rem;
+  background-color: #000000;
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+
+section.produtos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  margin: 2em 10vh;
+}
+
+/* Imagem dos produtos */
+.produto-image {
+  width: 50%;
+  height: 60%;
+  min-height: 150px;
+  min-width: 100px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.produto img {
+  border-radius: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Box dos produtos */
+.produto {
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  flex-direction: column;
+  background-color: rgba(255, 255, 255, 0.425);
+  width: 500px;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 10px;
+  height: auto;
+  min-height: 700px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  word-wrap: break-word;
+}
+
+.produto:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+
+.produto h2{
+  font-size: 1.5em;
+  color: #202020;
+}
+
+.produto h3 {
+  margin: 15px 0 10px;
+  font-size: 1.2em;
+}
+.promo-old-price h3 {
+  margin: 15px 0 10px;
+  color: #424242;
+}
+
+.produto-desc{
+  font-size: 1em;
+  color: #424242;
+  padding: 15px;
+}
+.full-desc{
+  font-size: 1em;
+  color: #424242;
+  padding: 15px;
+}
+
+
+
+.produtos span a {
+  font-size: 0.8rem;
+  padding: 15px;
+  color: #2e2e2e;
+}
+/* End Box dos produtos */
+
+
+
+
+/* Descrição, select e botão dos produtos */
+.produto-info {
+  width: auto;
+
+}
+
+/** botão select de produtos **/
+.produto-info select {
+  background-color: var(--primary-color);
+  color: #333; 
+  width: 50px;
+  margin: 10px;
+  text-align: center;
+  height: auto;
+  font-size: 16px; 
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+  outline: none; 
+  cursor: pointer; 
+}
+
+.produto-info span{
+  font-size: 1rem;
+}
+/* desbugando linha do select */
+.produto-info .select-btn{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+/* desbugando linha do select */
+
+
+/* Botões dos produtos*/
+
+
+
+.produto-info button {
+  display: inline-flex;  
+  justify-content: center;
+  align-items: center;
+  margin: 5px 5px;
+  width: 45%;
+  min-width: 180px;
+  background-color: #000;        
+  color: var(--primary-color);                 
+  border: none;                  
+  border-radius: 5px;            
+  padding: 15px;             
+  font-size: 1em;               
+  cursor: pointer;               
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.iconProduto {
+  color: var(--primary-color);
+  padding: 0 1rem;
+  font-size: 18px;
+}
+
+
+.btn-produto:hover, .produto-info .veja-mais:hover {
+  background-color: #0699d7;
+  transform: scale(1.05);
+}
+
+.btn-produto:active, .produto-info .veja-mais:active {
+  background-color: #5a7bf1;
+  transform: scale(0.98);
+}
+
+.produto-info .veja-mais {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px 5px;
+  width: 25%;
+  min-width: 50px;
+  background-color: #4d4d4d;
+  color: var(--primary-color);
+  border: none;
+  border-radius: 35px;
+  padding: 10px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+  /*** Media queries dos produtos ***/
+
+@media screen and (max-width: 1300px) {
+  section.produtos {
+    padding: 10px 0;
+    margin: 10px 0;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  section.produtos {
+    padding: 10px;
+    margin: 10px;
+  }
+
+  .produtos {
+    padding: 0;
+    margin: 0;
+  }
+
+}
+/* config mobile */
+@media screen and (max-width: 700px) {
+  .produto {
+    width: 100%;
+    padding: 10px;
+  }
+  .titulos-produtos h1 {
+    width: 60vw;
+    font-size: 4vw;
+  }
+}
+/* end produtos */
+  
+/**** Botão de paginas *****/
+
+.paginas {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.paginas button {
+  background-color: #161616;
+  padding: 10px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 30px;
+  color: var(--primary-color);
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.paginas button:hover {
+  background-color: #0699d7;
+}
+/* Estilo para o botão da página atual */
+.paginas button.pagina-atual {
+  background-color: #0699d7;
+}
+
+/* Estilo para botões desabilitados (página atual ou sem opção) */
+#paginas button:disabled {
+  background-color: #0699d7;
+  cursor: not-allowed;
+}

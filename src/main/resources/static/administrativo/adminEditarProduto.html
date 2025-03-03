@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Produto</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="./css/editar.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Editar Produto</h1>
+        <a href="../administrativo/listaProdutos.html" class="btn-primary">Voltar</a>
+    </header>
+    <main>
+        <form id="form-editar">
+            <input type="hidden" id="produto-id" value="">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" required>
+            <label for="preco">Preço:</label>
+            <input type="number" step="0.01" id="preco" required>
+            <label for="descricao">Descrição:</label>
+            <input type="text" id="descricao" required>
+            <label for="imgUrl">URL da Imagem:</label>
+            <input type="text" id="imgUrl" required>
+            <button type="submit">Salvar</button>
+        </form>
+    </main>
+</div>
+<script src="./js/edicaoProduto.js"></script>
+</body>
+</html>

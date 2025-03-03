@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Senha</title>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/noty@3.1.4/lib/noty.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/noty@3.1.4/lib/themes/mint.css">-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="./css/alterar-senha.css">
+
+
+</head>
+<body>
+<div class="container">
+    <h1>Alterar Senha</h1>
+    <form id="change-password-form">
+        <div class="form-group">
+            <label for="current-password">Senha Atual</label>
+            <input type="password" id="current-password" name="current-password" required>
+        </div>
+        <div class="form-group">
+            <label for="new-password">Nova Senha</label>
+            <input type="password" id="new-password" name="new-password" required>
+        </div>
+        <div class="form-group">
+            <label for="confirm-password">Confirmar Nova Senha</label>
+            <input type="password" id="confirm-password" name="confirm-password" required>
+
+        </div>
+        <span id="togglePassword" style="cursor: pointer;">Mostrar Senhas</span>
+
+        <div class="button-group">
+            <button type="submit">Alterar Senha</button>
+            <button type="button" onclick="window.history.back()">Voltar</button>
+        </div>
+    </form>
+</div>
+<script src="js/alterarSenha.js"></script>
+<script src="../publico/assets/js/libra.js"></script>
+</body>
+</html>

@@ -129,6 +129,15 @@ public class AutenticacaoController {
         }
     }
 
+       @PostMapping("/cliente2")
+   public ResponseEntity efetuarLogin2(@RequestBody @Valid DadosAutenticacao dados) {
+       var authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
+       var authentication = authenticationManager.authenticate(authenticationToken);
+       UserDetails user = (UserDetails) authentication.getPrincipal();
+       String token = tokenServices.gerarToken((User) user);
+       return ResponseEntity.ok(new DadosTokenJWT(token));
+   }
+
 //    @GetMapping(value="/verificarCadastro/{uuid}")
 //    public String verificarCadastro(@PathVariable("uuid") String uuid){
 //       return userService.verificarCadastro(uuid);

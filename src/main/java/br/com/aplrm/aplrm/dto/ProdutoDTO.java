@@ -34,7 +34,7 @@ public class ProdutoDTO {
 
     private Integer quantidade;
 
-    private Set<TamanhoDTO> tamanhos;
+    //private Set<TamanhoDTO> tamanhos;
 
     private Set<CategoriaDTO> categorias;
 
@@ -46,9 +46,9 @@ public class ProdutoDTO {
         this.descricao = produto.getDescricao();
         this.imgUrl = produto.getImgUrl();
 
-        this.tamanhos = produto.getTamanhos().stream()
-                .map(tamanho -> new TamanhoDTO(tamanho.getId(), tamanho.getDescricao()))
-                .collect(Collectors.toSet());
+//        this.tamanhos = produto.getTamanhos().stream()
+//                .map(tamanho -> new TamanhoDTO(tamanho.getId(), tamanho.getDescricao()))
+//                .collect(Collectors.toSet());
 
         this.categorias = produto.getCategorias().stream()
                 .map(categoria -> new CategoriaDTO(categoria.getId(), categoria.getNome()))
