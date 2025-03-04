@@ -44,8 +44,8 @@ public class ProdutoController {
 
     @GetMapping("/buscar")
     //@PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<List<ProdutoDTO>> buscarProdutos(@RequestParam(required = false) String filtro) {
-        List<ProdutoDTO> produtos = service.buscarProdutosString(filtro);
+    public ResponseEntity<List<ProdutoDTO>> buscarProdutos(@RequestParam(required = false) String nome) {
+        List<ProdutoDTO> produtos = service.buscarProdutosString(nome);
         return ResponseEntity.ok(produtos);
     }
 
@@ -57,7 +57,7 @@ public class ProdutoController {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping
+    @GetMapping("/paginas")
    // @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<ProdutoDTO>> findAll(Pageable pageable) {
         Page<ProdutoDTO> dto = service.findAll(pageable);
