@@ -49,7 +49,7 @@ public class TokenServices {
 
             return JWT.create()
                     .withIssuer("aplm")
-                   // .withSubject(usuario.getEmail())
+                    .withSubject(usuario.getEmail()) // Incluindo o email como subject
                     .withClaim("perfis", perfis)
                     .withClaim("nome", usuario.getNome())
                     .withClaim("email", usuario.getEmail().toLowerCase())
@@ -61,21 +61,27 @@ public class TokenServices {
         }
     }
 
-
     public String getSubject(String tokenJWT) {
         validarSecret();
 
         try {
             var algoritmo = Algorithm.HMAC512(secret);
-            return JWT.require(algoritmo)
+            var decodedJWT = JWT.require(algoritmo)
                     .withIssuer("aplm")
                     .build()
-                    .verify(tokenJWT)
-                    .getSubject();
+                    .verify(tokenJWT);
+
+            // Verificando se a data de expiração é null antes de comparar
+            if (decodedJWT.getExpiresAt() != null && decodedJWT.getExpiresAt().getTime() < System.currentTimeMillis()) {
+                throw new RuntimeException("Token expirado");
+            }
+
+            return decodedJWT.getSubject(); // Retorna o email do usuário (subject)
         } catch (JWTVerificationException exception) {
-            throw new RuntimeException("Token JWT inválido ou expirado");
+            throw new RuntimeException("Token JWT inválido ou expirado", exception);
         }
     }
+
 
     public boolean isValid(String tokenJWT) {
         validarSecret();
@@ -103,4 +109,6 @@ public class TokenServices {
             throw new IllegalStateException("JWT Secret não configurado corretamente!");
         }
     }
+
+
 }

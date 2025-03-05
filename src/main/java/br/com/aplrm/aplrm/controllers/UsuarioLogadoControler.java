@@ -17,7 +17,7 @@ public class UsuarioLogadoControler {
     @Autowired
     private UserService userService;
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+   // @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @GetMapping("/me")
     public ResponseEntity<UserPerfilDTO> getMe() {
         UserPerfilDTO dto = userService.getMe();

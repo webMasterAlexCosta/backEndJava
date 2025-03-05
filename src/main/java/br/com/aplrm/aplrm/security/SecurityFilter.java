@@ -1,6 +1,5 @@
 package br.com.aplrm.aplrm.security;
 
-
 import br.com.aplrm.aplrm.repositories.UserRepository;
 import br.com.aplrm.aplrm.services.TokenServices;
 import jakarta.servlet.FilterChain;
@@ -16,11 +15,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
-
 
     @Autowired
     private TokenServices tokenServices;
@@ -34,6 +33,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if (tokenJWT != null) {
             try {
+                // Recupera o subject (email) do token
                 String subject = tokenServices.getSubject(tokenJWT);
                 var usuario = repository.findByEmail(subject);
 
@@ -45,6 +45,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                     logger.warn("Usuário não encontrado: {}", subject);
                 }
             } catch (Exception e) {
+                logger.error("Erro ao autenticar o token: ", e);
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Erro na autenticação do token");
                 return;
             }

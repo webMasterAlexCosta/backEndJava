@@ -173,11 +173,15 @@ public class UserService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     protected User authenticated() {
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            if (username == null || username.isEmpty()) {
+                throw new UsernameNotFoundException("Usuário não encontrado");
+            }
             return userRepository.findByEmail(username);
+
         } catch (Exception e) {
             throw new UsernameNotFoundException("Usuário Inválido");
         }
@@ -186,6 +190,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserPerfilDTO getMe() {
         User user = authenticated();
+        System.out.println(user);
         return new UserPerfilDTO(user);
     }
 
