@@ -128,15 +128,25 @@ public class AutenticacaoController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
-
+//aqui o formato é JSON
        @PostMapping("/cliente2")
-   public ResponseEntity efetuarLogin2(@RequestBody @Valid DadosAutenticacao dados) {
+   public ResponseEntity<DadosTokenJWT> efetuarLogin2(@RequestBody @Valid DadosAutenticacao dados) {
        var authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
        var authentication = authenticationManager.authenticate(authenticationToken);
        UserDetails user = (UserDetails) authentication.getPrincipal();
        String token = tokenServices.gerarToken((User) user);
        return ResponseEntity.ok(new DadosTokenJWT(token));
    }
+   //aqui o formato é x-www-form
+    @PostMapping("/cliente3")
+    public ResponseEntity<DadosTokenJWT> efetuarLogin3(@RequestParam String email, @RequestParam String senha) {
+        var dados = new DadosAutenticacao(email, senha);
+        var authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
+        var authentication = authenticationManager.authenticate(authenticationToken);
+        UserDetails user = (UserDetails) authentication.getPrincipal();
+        String token = tokenServices.gerarToken((User) user);
+        return ResponseEntity.ok(new DadosTokenJWT(token));
+    }
 
 //    @GetMapping(value="/verificarCadastro/{uuid}")
 //    public String verificarCadastro(@PathVariable("uuid") String uuid){
