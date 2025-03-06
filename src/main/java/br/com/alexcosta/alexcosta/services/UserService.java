@@ -279,7 +279,7 @@ public class UserService {
         userVerificador.setUuid(UUID.randomUUID());
         userVerificador.setDataExpiracao(Instant.now().plusMillis(60000));
         userVerificadorRepository.save(userVerificador);
-        String url = "http://localhost:8080/codigocadastro/verificarcadastro/";
+        String url = "https://exceptional-cathi-alevivaldi-fe38a61b.koyeb.app/codigocadastro/verificarcadastro/";
 
         emailService.enviarEmailHtml(
                 user.getEmail(),
@@ -328,7 +328,7 @@ public class UserService {
 
     @Transactional
     private void enviarNovoLink(String email, UUID novoUuid) {
-        String url = "http://localhost:8080/codigocadastro/verificarcadastro/" + novoUuid.toString();
+        String url = "https://exceptional-cathi-alevivaldi-fe38a61b.koyeb.app/codigocadastro/verificarcadastro/" + novoUuid.toString();
         String htmlContent = "<html>" +
                 "<head>" +
                 "<style>" +
