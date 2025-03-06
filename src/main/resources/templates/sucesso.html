@@ -72,8 +72,10 @@
     <h1>Cadastro Verificado!</h1>
     <p th:text="${mensagem}">Seu cadastro foi realizado com sucesso.</p>
     <p>Agora você pode começar a explorar nossas funcionalidades!</p>
-    <button class="btn" onclick="window.location.href='/'">Voltar para o Início</button>
+    <!-- Usando <a> para abrir em uma nova aba -->
+    <a href="https://alexreact.vercel.app/" class="btn" target="_blank">Voltar para o Início</a>
     <div class="footer">Se precisar de ajuda, entre em contato conosco.</div>
 </div>
+
 </body>
 </html>

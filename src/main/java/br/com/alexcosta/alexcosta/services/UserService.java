@@ -277,16 +277,16 @@ public class UserService {
         UserVerificador userVerificador = new UserVerificador();
         userVerificador.setUser(user);
         userVerificador.setUuid(UUID.randomUUID());
-        userVerificador.setDataExpiracao(Instant.now().plusMillis(60000));
+        userVerificador.setDataExpiracao(Instant.now().plusMillis(3600000));
         userVerificadorRepository.save(userVerificador);
         String url = "https://exceptional-cathi-alevivaldi-fe38a61b.koyeb.app/codigocadastro/verificarcadastro/";
 
         emailService.enviarEmailHtml(
                 user.getEmail(),
-                "VPC ESPORT - Seja Bem-Vindo!!",
+                "Alex Costa ESPORT - Seja Bem-Vindo!!",
                 "<div style='font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f0f0f0; border-radius: 10px;'>" +
                         "<header style='background: linear-gradient(135deg, #050505, #dfe4e5); padding: 20px; border-radius: 10px 10px 0 0; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);'>" +
-                        "<h1 style='color: white; margin: 0; font-size: 2.5em; font-family: Georgia, serif; animation: fadeIn 1s;'>VPC Esports</h1>" +
+                        "<h1 style='color: white; margin: 0; font-size: 2.5em; font-family: Georgia, serif; animation: fadeIn 1s;'>Alex Costa Esports</h1>" +
                         "</header>" +
                         "<div style='display: flex; justify-content: center; align-items: center; flex-wrap: wrap; margin: 20px 0;'>" +
                         "<img src='https://s11.gifyu.com/images/SOjP4.gif' alt='GIF Animado' style='max-height: 300px; width: auto; border-radius: 10px; margin-right: 20px; margin-bottom: 20px;'>" +
@@ -306,7 +306,7 @@ public class UserService {
                         "Clique aqui para validar" +
                         "</a>" +
                         "<p style='font-size: 14px; color: #777; margin-top: 10px;'>Link válido por 60 minutos.</p>" +
-                        "<footer style='margin-top: 20px; color: #999;'>© 2024 VPC Esports. Todos os direitos reservados.</footer>" +
+                        "<footer style='margin-top: 20px; color: #999;'>© 2025 Alex Costa Esports. Todos os direitos reservados.</footer>" +
                         "<style>" +
                         "@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }" +
                         "a:hover { background-color: #218838; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); }" +
@@ -345,14 +345,14 @@ public class UserService {
                 "<body>" +
                 "<div class='container'>" +
                 "<header>" +
-                "<h1>VPC Esports</h1>" +
+                "<h1>Alex Costa Esports</h1>" +
                 "</header>" +
                 "<p>Olá!</p>" +
                 "<p>Seu link de verificação expirou.</p>" +
                 "<p>Clique no seguinte link para verificar sua conta:</p>" +
                 "<a href=\"" + url + "\" class=\"button\">Clique aqui para validar</a>" +
                 "<p style='font-size: 14px; color: #777; margin-top: 10px;'>Link válido por 10 minutos.</p>" +
-                "<footer>© 2024 VPC Esports. Todos os direitos reservados.</footer>" +
+                "<footer>© 2025 Alex Costa Esports. Todos os direitos reservados.</footer>" +
                 "</div>" +
                 "</body>" +
                 "</html>";
