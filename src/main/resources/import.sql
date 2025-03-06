@@ -28,7 +28,6 @@ INSERT INTO tb_perfil(authority) VALUES('CLIENT');
 INSERT INTO tb_perfil(authority) VALUES('ADMIN');
 
 
-
 INSERT INTO tb_produto_tamanho (produto_id, tamanho_id)VALUES (1, 1);
 INSERT INTO tb_produto_tamanho (produto_id, tamanho_id)VALUES (2, 1);
 INSERT INTO tb_produto_tamanho (produto_id, tamanho_id)VALUES (3, 1);
