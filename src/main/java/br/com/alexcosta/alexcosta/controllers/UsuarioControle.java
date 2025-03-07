@@ -5,7 +5,7 @@ import br.com.alexcosta.alexcosta.dto.UpdateSenha;
 import br.com.alexcosta.alexcosta.dto.UserCadastroDTO;
 import br.com.alexcosta.alexcosta.dto.UserDTO;
 import br.com.alexcosta.alexcosta.services.UserService;
-import br.com.alexcosta.alexcosta.services.exceptions.ResourceNotFoundExceptions;
+import br.com.alexcosta.alexcosta.controllers.handler.ResourceNotFoundExceptions;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

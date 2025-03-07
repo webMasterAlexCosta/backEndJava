@@ -29,6 +29,13 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // Ignorar o filtro de autenticação para requisições públicas (operacoes de leitura dos produtos)
+        if (isPublicRoute(request)) {
+            filterChain.doFilter(request, response); // Permite o acesso sem autenticação
+            return;
+        }
+
+        // Caso contrário, faz a verificação do token JWT
         String tokenJWT = recuperarToken(request);
 
         if (tokenJWT != null) {
@@ -41,24 +48,40 @@ public class SecurityFilter extends OncePerRequestFilter {
                     var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     logger.info("Usuário autenticado: {} com authorities: {}", usuario.getUsername(), usuario.getAuthorities());
+                    return;
                 } else {
                     logger.warn("Usuário não encontrado: {}", subject);
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Usuário não encontrado");
+                    return;
                 }
             } catch (Exception e) {
                 logger.error("Erro ao autenticar o token: ", e);
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Erro na autenticação do token");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Erro na autenticação do token");
                 return;
             }
         } else {
             logger.warn("Token não encontrado no cabeçalho");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token não encontrado");
         }
 
         filterChain.doFilter(request, response);
     }
 
+    private boolean isPublicRoute(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+
+        // Lista de rotas públicas que não precisam de autenticação
+        return uri.startsWith("/produtos/paginas") || // Página de produtos
+                uri.matches("/produtos/\\d+") ||
+                uri.matches("/produtos/lista") ||
+                uri.matches("/produtos/filtro")||
+
+                // Produto com ID específico (ex: /produtos/1)
+                uri.startsWith("/login/cliente3"); // Login sem autenticação
+    }
+
     private String recuperarToken(HttpServletRequest request) {
         var authorizationHeader = request.getHeader("Authorization");
-        logger.info("Token recebido do header Authorization: {}", authorizationHeader);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             return authorizationHeader.substring(7);
         }

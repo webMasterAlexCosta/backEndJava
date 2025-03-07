@@ -1,4 +1,4 @@
-package br.com.alexcosta.alexcosta.entities.usuario;
+package br.com.alexcosta.alexcosta.dto;
 
 public record DadosAutenticacao(String email, String senha) {
 }

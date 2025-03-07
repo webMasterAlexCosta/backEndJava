@@ -5,7 +5,7 @@ import br.com.alexcosta.alexcosta.entities.Categoria;
 import br.com.alexcosta.alexcosta.entities.Produto;
 import br.com.alexcosta.alexcosta.repositories.CategoriaRepository;
 import br.com.alexcosta.alexcosta.repositories.ProdutoRepository;
-import br.com.alexcosta.alexcosta.services.exceptions.ResourceNotFoundExceptions;
+import br.com.alexcosta.alexcosta.controllers.handler.ResourceNotFoundExceptions;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

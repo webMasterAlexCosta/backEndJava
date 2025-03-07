@@ -9,7 +9,7 @@ import br.com.alexcosta.alexcosta.repositories.EnderecoRepository;
 import br.com.alexcosta.alexcosta.repositories.PerfilRepository;
 import br.com.alexcosta.alexcosta.repositories.UserRepository;
 import br.com.alexcosta.alexcosta.repositories.UserVerificadorRepository;
-import br.com.alexcosta.alexcosta.services.exceptions.ResourceNotFoundExceptions;
+import br.com.alexcosta.alexcosta.controllers.handler.ResourceNotFoundExceptions;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;

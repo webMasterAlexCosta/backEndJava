@@ -9,7 +9,7 @@ import br.com.alexcosta.alexcosta.repositories.PedidoItemRepository;
 import br.com.alexcosta.alexcosta.repositories.PedidoRepository;
 import br.com.alexcosta.alexcosta.repositories.ProdutoRepository;
 import br.com.alexcosta.alexcosta.repositories.TamanhoRepository; // Adicione o repositório de tamanhos se necessário
-import br.com.alexcosta.alexcosta.services.exceptions.ResourceNotFoundExceptions;
+import br.com.alexcosta.alexcosta.controllers.handler.ResourceNotFoundExceptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

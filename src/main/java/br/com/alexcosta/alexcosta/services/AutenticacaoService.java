@@ -1,8 +1,7 @@
-package br.com.alexcosta.alexcosta.entities.usuario;
+package br.com.alexcosta.alexcosta.services;
 
 import br.com.alexcosta.alexcosta.entities.User;
 import br.com.alexcosta.alexcosta.repositories.UserRepository;
-import br.com.alexcosta.alexcosta.services.TokenServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

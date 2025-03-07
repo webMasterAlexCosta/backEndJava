@@ -3,7 +3,7 @@ package br.com.alexcosta.alexcosta.controllers;
 import br.com.alexcosta.alexcosta.dto.ProdutoDTO;
 
 import br.com.alexcosta.alexcosta.services.ProdutoService;
-import br.com.alexcosta.alexcosta.services.exceptions.DataBaseException;
+import br.com.alexcosta.alexcosta.controllers.handler.DataBaseException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -55,7 +55,6 @@ public class ProdutoController {
     }
 
     @GetMapping("/paginas")
-   // @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<ProdutoDTO>> findAll(Pageable pageable) {
         Page<ProdutoDTO> dto = service.findAll(pageable);
         return ResponseEntity.ok(dto);

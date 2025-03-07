@@ -28,14 +28,14 @@
                     .csrf(csrf -> csrf.disable())
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .authorizeRequests(authorizeRequests -> authorizeRequests
-                            .requestMatchers("/publico/**").permitAll()
+//                            .requestMatchers("/publico/**").permitAll()
                             .requestMatchers("/usuarios/*/delete").hasAuthority("ADMIN")
-                            .requestMatchers("/usuarios/senha","/usuarios/email","/usuarios/endereco","usuarios/*/atualizar").authenticated()
-                            .requestMatchers("usuarios/cadastro").permitAll()
+                            .requestMatchers("/usuarios/senha", "/usuarios/email", "/usuarios/endereco", "usuarios/*/atualizar").authenticated()
+                           .requestMatchers("usuarios/cadastro").permitAll()
                             .requestMatchers("/produtos/filtro/**").permitAll()
-                            .requestMatchers("/produtos/buscar","/produtos/{id}","/produtos/buscarpornome", "/produtos/lista","produtos/procurarCategoria").permitAll()
-                            .requestMatchers("/produtos/**", "/produtos/paginarTodos","/produtos/*/deletar","/produtos/*/atualizar").hasAuthority("ADMIN")
-                            .anyRequest().permitAll()
+                           .requestMatchers("/produtos/buscar","/produtos/paginas", "/produtos/{id}", "/produtos/buscarpornome", "/produtos/lista", "produtos/procurarCategoria").permitAll()
+                           .requestMatchers("/produtos/**", "/produtos/paginarTodos", "/produtos/*/deletar", "/produtos/*/atualizar").hasAuthority("ADMIN")
+                            .anyRequest().permitAll() // Permitir todas as outras requisições
                     )
                     .headers(headers -> headers
                             .frameOptions(frameOptions -> frameOptions.disable())
@@ -50,6 +50,7 @@
         public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
             return configuration.getAuthenticationManager();
         }
+
         @Bean
         public PasswordEncoder passwordEncoder() {
             return new BCryptPasswordEncoder();

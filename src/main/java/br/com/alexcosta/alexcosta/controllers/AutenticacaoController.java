@@ -2,7 +2,7 @@ package br.com.alexcosta.alexcosta.controllers;
 
 import br.com.alexcosta.alexcosta.dto.UserPerfilDTO;
 import br.com.alexcosta.alexcosta.entities.User;
-import br.com.alexcosta.alexcosta.entities.usuario.DadosAutenticacao;
+import br.com.alexcosta.alexcosta.dto.DadosAutenticacao;
 import br.com.alexcosta.alexcosta.security.DadosTokenJWT;
 import br.com.alexcosta.alexcosta.services.TokenServices;
 import br.com.alexcosta.alexcosta.services.UserService;
