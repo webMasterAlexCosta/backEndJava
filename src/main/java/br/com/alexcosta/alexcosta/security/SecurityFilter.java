@@ -78,7 +78,8 @@ public class SecurityFilter extends OncePerRequestFilter {
 
                 // Produto com ID específico (ex: /produtos/1)
                 uri.startsWith("/login/cliente3") ||// Login sem autenticação
-                uri.startsWith("/usuarios/cadastro");
+                uri.startsWith("/usuarios/cadastro")||
+                uri.startsWith("/codigocadastro/verificarcadastro");
     }
 
     private String recuperarToken(HttpServletRequest request) {
