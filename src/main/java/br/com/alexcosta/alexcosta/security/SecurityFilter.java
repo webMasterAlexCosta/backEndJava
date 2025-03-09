@@ -84,6 +84,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 uri.startsWith("/login/cliente3") ||// Login sem autenticação
                 uri.startsWith("/usuarios/cadastro")||
                 uri.startsWith("/publico") ||
+                uri.startsWith("/api/recuperacao/solicitar")||
                 uri.startsWith("/codigocadastro/verificarcadastro");
     }
 
