@@ -290,43 +290,31 @@ public class UserService {
         emailService.enviarEmailHtml(
                 user.getEmail(),
                 "Alex Costa ESPORT - Seja Bem-Vindo!!",
-                "<div style='font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f0f0f0; border-radius: 10px;'>" +
-                        "<header style='background: linear-gradient(135deg, #050505, #dfe4e5); padding: 20px; border-radius: 10px 10px 0 0; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);'>" +
+                "<div style='font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f9f9f9; border-radius: 15px; max-width: 600px; margin: auto; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);'>" +
+                        "<header style='background: linear-gradient(135deg, #1a1a1a, #333333); padding: 20px; border-radius: 15px 15px 0 0; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);'>" +
                         "<h1 style='color: white; margin: 0; font-size: 2.5em; font-family: Georgia, serif; animation: fadeIn 1s;'>Alex Costa Esports</h1>" +
                         "</header>" +
-                        "<div style='display: flex; justify-content: center; align-items: center; flex-wrap: wrap; margin: 20px 0;'>" +
-                        "<img src='https://s11.gifyu.com/images/SOjP4.gif' alt='GIF Animado' style='max-height: 300px; width: auto; border-radius: 10px; margin-right: 20px; margin-bottom: 20px;'>" +
-                        "<div style='flex: 1; min-width: 300px; max-width: 500px;'>" +
-                        "<div style='position: relative; overflow: hidden;'>" +
-                        "<div style='display: flex; transition: transform 0.5s;' id='carousel'>" +
-                        "<div style='min-width: 100%;'><img src='https://media.istockphoto.com/id/1460172015/pt/foto/businessmen-making-handshake-with-partner-greeting-dealing-merger-and-acquisition-business.jpg?s=612x612&w=0&k=20&c=v5ilTEywZFn_AhXVETSeKSrX5JMZVE7XojEBZF4Hnpw=' alt='Imagem 1' style='width: 100%; height: auto; border-radius: 10px; object-fit: cover;'></div>" +
-                        "<div style='min-width: 100%;'><img src='https://media.istockphoto.com/id/1315630429/pt/foto/close-up-top-view-of-young-and-freshness-energy-business-people-putting-their-strong-hands.jpg?s=2048x2048&w=is&k=20&c=vyee5xScKCEijEY9oTaYyjJKD9QA-KaPrah18KCpdlk=' alt='Imagem 2' style='width: 100%; height: auto; border-radius: 10px; object-fit: cover;'></div>" +
-                        "<div style='min-width: 100%;'><img src='https://media.istockphoto.com/id/1463971764/pt/vetorial/business-people-holding-hands-and-raising.jpg?s=612x612&w=0&k=20&c=j9mxKMvKST-AknM8yKsP2AJWxIbFI32UFQ8nuEqMr5Q=' alt='Imagem 3' style='width: 100%; height: auto; border-radius: 10px; object-fit: cover;'></div>" +
-                        "</div>" +
-                        "</div>" +
-                        "</div>" +
-                        "</div>" +
-                        "<p style='font-size: 18px; color: #333; margin: 20px 0;'>Seja Bem Vindo " + user.getNome() + "! Estamos empolgados por você estar aqui! Muito Prazer meu nome é Alex e gostaria de informar que </p>" +
-                        "<p style='font-size: 16px; color: #555;'>Para ativar seu cadastro, clique no link de validação abaixo:</p>" +
-                        "<a href='" + url + userVerificador.getUuid() + "' style='display: inline-block; padding: 12px 24px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);'>" +
-                        "Clique aqui para validar" +
+                        "<section style='padding: 20px;'>" +
+                        "<p style='font-size: 18px; color: #333; margin: 20px 0; line-height: 1.6;'>Olá <strong>" + user.getNome() + "</strong>, seja bem-vindo! Estamos empolgados por você fazer parte da nossa comunidade. Meu nome é Alex, e estou aqui para garantir que sua experiência seja incrível.</p>" +
+                        "<p style='font-size: 16px; color: #555; line-height: 1.5;'>Para ativar seu cadastro, clique no botão abaixo:</p>" +
+                        "<a href='" + url + userVerificador.getUuid() + "' style='display: inline-block; padding: 15px 30px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);'>" +
+                        "Validar Cadastro" +
                         "</a>" +
-                        "<p style='font-size: 14px; color: #777; margin-top: 10px;'>Link válido por 60 minutos.</p>" +
-                        "<footer style='margin-top: 20px; color: #999;'>© 2025 Alex Costa Esports. Todos os direitos reservados.</footer>" +
+                        "<p style='font-size: 14px; color: #777; margin-top: 15px; line-height: 1.4;'>Este link é válido por <strong>60 minutos</strong>. Caso não consiga acessá-lo dentro desse período, entre em contato conosco.</p>" +
+                        "</section>" +
+                        "<footer style='margin-top: 20px; padding: 15px; background-color: #f0f0f0; border-radius: 0 0 15px 15px; color: #999; font-size: 12px; line-height: 1.4;'>" +
+                        "© 2025 Alex Costa Esports. Todos os direitos reservados.<br>" +
+                        "Caso tenha dúvidas, entre em contato através do email <a href='mailto:thg6321@gmail.com' style='color: #28a745; text-decoration: none;'>suporte@alexcostaesports.com</a>." +
+                        "</footer>" +
                         "<style>" +
                         "@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }" +
-                        "a:hover { background-color: #218838; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); }" +
-                        "</style>" +
-                        "<script>" +
-                        "let currentIndex = 0;" +
-                        "const totalSlides = 3;" +
-                        "function showSlide(index) {" +
-                        "const carousel = document.getElementById('carousel');" +
-                        "carousel.style.transform = 'translateX(' + (-index * 100) + '%)';" +
+                        "a:hover { background-color: #218838; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); }" +
+                        "@media (max-width: 600px) {" +
+                        "h1 { font-size: 2em; }" +
+                        "p { font-size: 16px; }" +
+                        "a { padding: 12px 24px; }" +
                         "}" +
-                        "function nextSlide() { currentIndex = (currentIndex + 1) % totalSlides; showSlide(currentIndex); }" +
-                        "setInterval(nextSlide, 3000);" +
-                        "</script>" +
+                        "</style>" +
                         "</div>"
         );
         return new UserCadastroDTO(user);
