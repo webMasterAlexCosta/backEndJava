@@ -15,13 +15,17 @@ public class PaginasControleDeAcesso {
     @Autowired
     private UserService userService;
 
-//    @RequestMapping("/")
-//    public ModelAndView index() {
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName("redirect:/publico/index.html");
-//        return modelAndView;
+//    @GetMapping("/")
+//    public String index() {
+//        return "redirect:/publico/home";
 //    }
 
+        @RequestMapping("/")
+    public ModelAndView index() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/publico/index.html");
+        return modelAndView;
+    }
     @GetMapping(value = "/codigocadastro/verificarcadastro/{uuid}")
     public String verificarCadastro(@PathVariable("uuid") String uuid, Model model) {
         String mensagem = userService.verificarCadastro(uuid);
@@ -41,6 +45,4 @@ public class PaginasControleDeAcesso {
             throw new RuntimeException(e);
         }
     }
-
-
 }

@@ -34,7 +34,10 @@ public class SecurityFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response); // Permite o acesso sem autenticação
             return;
         }
-
+        if (request.getRequestURI().equals("/")) {
+            response.sendRedirect(request.getContextPath() + "/publico/index.html");
+            return;
+        }
         // Caso contrário, faz a verificação do token JWT
         String tokenJWT = recuperarToken(request);
 
@@ -80,6 +83,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 // Produto com ID específico (ex: /produtos/1)
                 uri.startsWith("/login/cliente3") ||// Login sem autenticação
                 uri.startsWith("/usuarios/cadastro")||
+                uri.startsWith("/publico") ||
                 uri.startsWith("/codigocadastro/verificarcadastro");
     }
 

@@ -14,16 +14,16 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:8080/,http://localhost:5173/,https://alexreact.vercel.app/","https://alexcosta-alex-costas-projects-4ffe193f.vercel.app/")
+                .allowedOrigins("http://localhost:8080/","http://localhost:5173/","https://alexreact.vercel.app/")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
-
     @Bean
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-        resolver.setPrefix("classpath:/resources/templates/");
+       // resolver.setPrefix("classpath:/resources/templates/");
+        resolver.setPrefix("classpath:/templates/");
         resolver.setSuffix(".html");
         return resolver;
     }

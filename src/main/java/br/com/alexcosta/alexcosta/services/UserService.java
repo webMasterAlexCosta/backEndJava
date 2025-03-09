@@ -15,6 +15,7 @@ import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -58,7 +59,12 @@ public class UserService {
     private JavaMailSender emailSender;
 
     public Map<String, String> codigosDeRecuperacao = new HashMap<>();
+    // A URL base e o caminho são injetados através do @Value
+    @Value("${url.base}")
+    private String urlBase;
 
+    @Value("${url.caminho}")
+    private String urlCaminho;
 
 
     @Transactional
@@ -279,7 +285,7 @@ public class UserService {
         userVerificador.setUuid(UUID.randomUUID());
         userVerificador.setDataExpiracao(Instant.now().plusMillis(3600000));
         userVerificadorRepository.save(userVerificador);
-        String url = "https://exceptional-cathi-alevivaldi-fe38a61b.koyeb.app/codigocadastro/verificarcadastro/";
+        String url = urlBase+urlCaminho;
 
         emailService.enviarEmailHtml(
                 user.getEmail(),
