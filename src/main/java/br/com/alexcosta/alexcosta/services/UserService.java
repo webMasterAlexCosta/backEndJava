@@ -59,12 +59,7 @@ public class UserService {
     private JavaMailSender emailSender;
 
     public Map<String, String> codigosDeRecuperacao = new HashMap<>();
-    // A URL base e o caminho são injetados através do @Value
-    @Value("${url.base}")
-    private String urlBase;
 
-    @Value("${url.caminho}")
-    private String urlCaminho;
 
 
     @Transactional
@@ -286,7 +281,7 @@ public class UserService {
         userVerificador.setDataExpiracao(Instant.now().plusMillis(3600000));
         userVerificadorRepository.save(userVerificador);
 
-        String urlDominio = "https://exceptional-cathi-alevivaldi-fe38a61b.koyeb.app/";
+        String urlDominio = "https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/";
 
         String urlServicoEmail = "codigocadastro/verificarcadastro/";
 
