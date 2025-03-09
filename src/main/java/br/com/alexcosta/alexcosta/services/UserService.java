@@ -60,10 +60,10 @@ public class UserService {
 
     public Map<String, String> codigosDeRecuperacao = new HashMap<>();
     // A URL base e o caminho são injetados através do @Value
-    @Value("${urlBase}")
+    @Value("${url.base}")
     private String urlBase;
 
-    @Value("${urlCaminho}")
+    @Value("${url.caminho}")
     private String urlCaminho;
 
 
@@ -285,7 +285,12 @@ public class UserService {
         userVerificador.setUuid(UUID.randomUUID());
         userVerificador.setDataExpiracao(Instant.now().plusMillis(3600000));
         userVerificadorRepository.save(userVerificador);
-        String url = urlBase+urlCaminho;
+
+        String urlDominio = "https://exceptional-cathi-alevivaldi-fe38a61b.koyeb.app/";
+
+        String urlServicoEmail = "codigocadastro/verificarcadastro/";
+
+        String url =urlDominio+urlServicoEmail ;
 
         emailService.enviarEmailHtml(
                 user.getEmail(),
