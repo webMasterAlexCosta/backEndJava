@@ -60,10 +60,10 @@ public class UserService {
 
     public Map<String, String> codigosDeRecuperacao = new HashMap<>();
     // A URL base e o caminho são injetados através do @Value
-    @Value("${url.base}")
+    @Value("${urlBase}")
     private String urlBase;
 
-    @Value("${url.caminho}")
+    @Value("${urlCaminho}")
     private String urlCaminho;
 
 
