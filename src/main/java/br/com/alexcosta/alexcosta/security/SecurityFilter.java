@@ -79,6 +79,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 uri.matches("/produtos/lista") ||
                 uri.matches("/produtos/filtro")||
                 uri.matches("/produtos/paginas") ||
+                uri.matches("/produtos/buscar")||
 
                 // Produto com ID específico (ex: /produtos/1)
                 uri.startsWith("/login/cliente3") ||// Login sem autenticação
