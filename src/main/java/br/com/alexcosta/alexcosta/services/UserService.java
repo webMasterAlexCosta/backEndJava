@@ -178,15 +178,21 @@ public class UserService {
     protected User authenticated() {
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            System.out.println("Usuário autenticado: " + username);
+
             if (username == null || username.isEmpty()) {
                 throw new UsernameNotFoundException("Usuário não encontrado");
             }
-            return userRepository.findByEmail(username);
 
+            User user = userRepository.findByEmail(username);
+            System.out.println("Usuário encontrado no banco: " + user);
+
+            return user;
         } catch (Exception e) {
-            throw new UsernameNotFoundException("Usuário Inválido");
+            throw new UsernameNotFoundException("Usuário Inválido", e);
         }
     }
+
 
     @Transactional(readOnly = true)
     public UserPerfilDTO getMe() {
@@ -281,7 +287,10 @@ public class UserService {
         userVerificador.setDataExpiracao(Instant.now().plusMillis(3600000));
         userVerificadorRepository.save(userVerificador);
 
-        String urlDominio = "https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/";
+        String urlServidor = "https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/";
+
+       // String urlLocalHost="http://localhost:8080/";
+        String urlDominio = urlServidor;
 
         String urlServicoEmail = "codigocadastro/verificarcadastro/";
 

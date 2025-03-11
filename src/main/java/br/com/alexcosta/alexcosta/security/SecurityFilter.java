@@ -10,11 +10,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
@@ -29,29 +33,27 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // Ignorar o filtro de autenticação para requisições públicas (operacoes de leitura dos produtos)
         if (isPublicRoute(request)) {
-            filterChain.doFilter(request, response); // Permite o acesso sem autenticação
+            filterChain.doFilter(request, response);
             return;
         }
-        if (request.getRequestURI().equals("/")) {
-            response.sendRedirect(request.getContextPath() + "/publico/index.html");
-            return;
-        }
-        // Caso contrário, faz a verificação do token JWT
+
         String tokenJWT = recuperarToken(request);
 
         if (tokenJWT != null) {
             try {
-                // Recupera o subject (email) do token
                 String subject = tokenServices.getSubject(tokenJWT);
                 var usuario = repository.findByEmail(subject);
 
                 if (usuario != null) {
-                    var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+                    List<SimpleGrantedAuthority> authorities = usuario.getAuthorities().stream()
+                            .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
+                            .collect(Collectors.toList());
+
+                    var authentication = new UsernamePasswordAuthenticationToken(usuario, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    logger.info("Usuário autenticado: {} com authorities: {}", usuario.getUsername(), usuario.getAuthorities());
-                    return;
+
+                    logger.info("Usuário autenticado: {} com authorities: {}", usuario.getUsername(), authorities);
                 } else {
                     logger.warn("Usuário não encontrado: {}", subject);
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Usuário não encontrado");
@@ -65,6 +67,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         } else {
             logger.warn("Token não encontrado no cabeçalho");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token não encontrado");
+            return;
         }
 
         filterChain.doFilter(request, response);
@@ -72,28 +75,40 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private boolean isPublicRoute(HttpServletRequest request) {
         String uri = request.getRequestURI();
-
-        // Lista de rotas públicas que não precisam de autenticação
-        return uri.startsWith("/produtos/paginas") || // Página de produtos
-                uri.matches("/produtos/\\d+") ||
-                uri.matches("/produtos/lista") ||
-                uri.matches("/produtos/filtro")||
-                uri.matches("/produtos/paginas") ||
-                uri.matches("/produtos/buscar")||
-
-                // Produto com ID específico (ex: /produtos/1)
-                uri.startsWith("/login/cliente3") ||// Login sem autenticação
-                uri.startsWith("/usuarios/cadastro")||
+        return uri.matches("/produtos/\\d+") ||
+                uri.startsWith("/produtos/paginas") ||
+                uri.startsWith("/produtos/lista") ||
+                uri.startsWith("/login/cliente3")||
+                uri.startsWith("/login/cliente")||
+                uri.startsWith("/produtos/buscar") ||
+                uri.startsWith("/usuarios/cadastro") ||
                 uri.startsWith("/publico") ||
-                uri.startsWith("/api/recuperacao/solicitar")||
+                uri.startsWith("/api/recuperacao/solicitar") ||
                 uri.startsWith("/codigocadastro/verificarcadastro");
     }
 
     private String recuperarToken(HttpServletRequest request) {
-        var authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring(7);
-        }
-        return null;
+        return Optional.ofNullable(request.getHeader("Authorization"))
+                .filter(header -> header.startsWith("Bearer "))
+                .map(header -> header.substring(7).trim())
+                .orElse(null);
     }
 }
+
+
+//    private boolean isPublicRoute(HttpServletRequest request) {
+//        String uri = request.getRequestURI();
+//        return List.of(
+//                "/produtos/paginas", "/produtos/lista", "/produtos/buscar", "/produtos/filtro",
+//                "/usuarios/cadastro", "/codigocadastro/verificarcadastro", "/publico", "/api/recuperacao/solicitar"
+//        ).stream().anyMatch(uri::startsWith) || uri.matches("/produtos/\\d+");
+//    }
+
+//    private String recuperarToken(HttpServletRequest request) {
+//        var authorizationHeader = request.getHeader("Authorization");
+//        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+//            return authorizationHeader.substring(7);
+//        }
+//        return null;
+//    }
+

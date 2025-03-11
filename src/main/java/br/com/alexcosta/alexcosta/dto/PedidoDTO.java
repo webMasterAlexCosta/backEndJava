@@ -18,27 +18,35 @@ import java.util.List;
 @AllArgsConstructor
 public class PedidoDTO {
     private Integer id;
-
     private Instant momento;
     private StatusPedido statusPedido;
-
     private String numeroPedido;
     private UserDTO client;
-    private List<PedidoItemDTO> items = new ArrayList<>();
+    private List<PedidoItemDTO> items = new ArrayList<>();  // Adicionado a lista de PedidoItemDTO
 
+    // Construtor que recebe um Pedido e mapeia os dados para o PedidoDTO
     public PedidoDTO(Pedido pedido) {
         this.id = pedido.getId();
         this.momento = pedido.getMomento();
         this.statusPedido = pedido.getStatus();
         this.client = new UserDTO(pedido.getCliente());
+        this.numeroPedido = pedido.getNumeroPedido();
+
+        // Mapeando os itens do pedido para PedidoItemDTO
         for (PedidoItem item : pedido.getItems()) {
-            PedidoItemDTO itemDTO = new PedidoItemDTO(item.getId().getProduto().getId(), item.getPreco(), item.getQuantidade(), item.getId().getTamanho(), item.getId().getProduto().getImgUrl());
-            items.add(itemDTO);
+            PedidoItemDTO itemDTO = new PedidoItemDTO(
+                    item.getId().getProduto().getId(),
+                    item.getPreco(),
+                    item.getQuantidade(),
+                    item.getId().getTamanho(),
+                    item.getId().getProduto().getImgUrl()
+            );
+            this.items.add(itemDTO);
         }
-        this.numeroPedido=pedido.getNumeroPedido();
     }
 
-      public Double getTotal() {
+
+    public Double getTotal() {
         double soma = 0;
         for (PedidoItemDTO item : items) {
             soma += item.getSubTotal();

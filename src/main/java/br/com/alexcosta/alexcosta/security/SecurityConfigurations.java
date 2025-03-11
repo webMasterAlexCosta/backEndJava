@@ -28,12 +28,12 @@
                     .csrf(csrf -> csrf.disable())
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .authorizeRequests(authorizeRequests -> authorizeRequests
-//                            .requestMatchers("/publico/**").permitAll()
+                            .requestMatchers("/").permitAll()
                             .requestMatchers("/usuarios/*/delete").hasAuthority("ADMIN")
-                            .requestMatchers("/usuarios/senha", "/usuarios/email", "/usuarios/endereco", "usuarios/*/atualizar").authenticated()
-                           .requestMatchers("usuarios/cadastro","/codigocadastro/verificarcadastro").permitAll()
+                            .requestMatchers("/usuarios/senha", "/usuarios/email","/login/admin", "/usuarios/endereco", "/usuarios/*/atualizar","/pedidos/salvar").authenticated()
+                           .requestMatchers("/usuarios/cadastro","/codigocadastro/verificarcadastro").permitAll()
                             .requestMatchers("/produtos/filtro/**","/publico").permitAll()
-                           .requestMatchers("/produtos/buscar","/produtos/paginas", "/produtos/{id}", "/produtos/buscarpornome", "/produtos/lista", "produtos/procurarCategoria").permitAll()
+                           .requestMatchers("/produtos/buscar","/produtos/paginas", "/produtos/{id}", "/produtos/buscarpornome", "/produtos/lista", "/produtos/procurarCategoria").permitAll()
                            .requestMatchers("/produtos/**", "/produtos/paginarTodos", "/produtos/*/deletar", "/produtos/*/atualizar").hasAuthority("ADMIN")
                             .anyRequest().permitAll() // Permitir todas as outras requisições
                     )

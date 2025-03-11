@@ -53,4 +53,7 @@ public class ProdutoDTO {
                 .map(categoria -> new CategoriaDTO(categoria.getId(), categoria.getNome()))
                 .collect(Collectors.toSet());
     }
+    public Double getSubTotal() {
+        return preco * quantidade;
+    }
 }

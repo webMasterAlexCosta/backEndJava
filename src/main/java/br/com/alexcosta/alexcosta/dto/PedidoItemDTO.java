@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PedidoItemDTO {
 
-    private Integer produto;
+    private Integer id;
     private Double preco;
     private Integer quantidade;
     private Integer tamanho;
