@@ -48,12 +48,17 @@ public class TokenServices {
             }
 
             return JWT.create()
-                    .withIssuer("aplm")
+                    .withIssuer("alexCosta")
                     .withSubject(usuario.getEmail()) // Incluindo o email como subject
                     .withClaim("perfis", perfis)
                     .withClaim("nome", usuario.getNome())
                     .withClaim("email", usuario.getEmail().toLowerCase())
                     .withClaim("endereco", enderecoMap)
+                    .withClaim("telefone", usuario.getTelefone())
+                    .withClaim("dataNascimento", String.valueOf(usuario.getDataNascimento()))
+                    .withClaim("id", String.valueOf(usuario.getId()))
+
+
                     .withExpiresAt(dataExpiracao())
                     .sign(algoritmo);
         } catch (JWTCreationException exception) {
@@ -67,7 +72,7 @@ public class TokenServices {
         try {
             var algoritmo = Algorithm.HMAC512(secret);
             var decodedJWT = JWT.require(algoritmo)
-                    .withIssuer("aplm")
+                    .withIssuer("alexCosta")
                     .build()
                     .verify(tokenJWT);
 

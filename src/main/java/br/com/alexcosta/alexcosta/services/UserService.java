@@ -289,12 +289,13 @@ public class UserService {
 
         String urlServidor = "https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/";
 
-       // String urlLocalHost="http://localhost:8080/";
+        //String urlLocalHost="http://localhost:8080/";
+
         String urlDominio = urlServidor;
 
         String urlServicoEmail = "codigocadastro/verificarcadastro/";
 
-        String url =urlDominio+urlServicoEmail ;
+        String url =urlServidor+urlServicoEmail ;
 
         emailService.enviarEmailHtml(
                 user.getEmail(),
