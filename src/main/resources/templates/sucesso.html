@@ -4,78 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro Verificado com Sucesso</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(to right, #e8f5e9, #f1f8e9);
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff6347, #ff4500);
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            color: #333;
-            position: relative;
-        }
-        .container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            text-align: center;
-            width: 90%;
-            max-width: 400px;
-            transition: transform 0.3s;
-        }
-        .container:hover {
-            transform: scale(1.02);
-        }
-        h1 {
-            color: #388e3c;
-            margin-bottom: 15px;
-            font-size: 24px;
-        }
-        p {
-            color: #555;
-            margin-bottom: 25px;
+            color: white;
             font-size: 18px;
+            text-align: center;
         }
-        .icon {
+
+        .success-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            animation: popIn 1s ease-out;
+        }
+
+        .success-title {
             font-size: 50px;
-            color: #388e3c;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
             margin-bottom: 20px;
         }
-        .btn {
-            background-color: #388e3c;
-            color: white;
+
+        .success-message {
+            font-size: 20px;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .emoji {
+            font-size: 80px;
+            margin-bottom: 30px;
+            color: #00ff7f;
+            animation: bounce 1s infinite;
+        }
+
+        .button {
+            padding: 20px 50px;
+            background-color: #00ff7f;
+            color: #333;
             border: none;
-            border-radius: 5px;
-            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
             cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            text-decoration: none;
         }
-        .btn:hover {
-            background-color: #2e7d32;
-            transform: translateY(-2px);
+
+        .button:hover {
+            background-color: #32cd32;
+            transform: scale(1.1);
         }
+
+        .button:active {
+            background-color: #228b22;
+            transform: scale(0.95);
+        }
+
         .footer {
-            margin-top: 20px;
+            margin-top: 30px;
             font-size: 14px;
-            color: #777;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="icon">✅</div> <!-- Ícone de sucesso -->
-    <h1>Cadastro Verificado!</h1>
-    <p th:text="${mensagem}">Seu cadastro foi realizado com sucesso.</p>
-    <p>Agora você pode começar a explorar nossas funcionalidades!</p>
-    <!-- Usando <a> para abrir em uma nova aba -->
-    <a href="https://alexcosta.vercel.app/" class="btn" target="_blank">Voltar para o Início</a>
-    <div class="footer">Se precisar de ajuda, entre em contato conosco.</div>
+<div class="success-container">
+    <div class="emoji">🎉</div>
+    <div class="success-title">Cadastro Confirmado!</div>
+    <div class="success-message">
+        Seu cadastro foi realizado com sucesso. Agora você pode aproveitar todas as funcionalidades exclusivas da plataforma.
+    </div>
+    <a href="https://alexcosta.vercel.app/" class="button" >Voltar ao Início</a>
+    <div class="footer">Se precisar de ajuda, estamos à disposição!</div>
 </div>
-
 </body>
 </html>

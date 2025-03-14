@@ -1,6 +1,8 @@
 package br.com.alexcosta.alexcosta.web;
 
 import br.com.alexcosta.alexcosta.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,11 +16,8 @@ public class PaginasControleDeAcesso {
 
     @Autowired
     private UserService userService;
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-//    @GetMapping("/")
-//    public String index() {
-//        return "redirect:/publico/home";
-//    }
 
         @RequestMapping("/")
     public ModelAndView index() {
@@ -32,17 +31,24 @@ public class PaginasControleDeAcesso {
 
         // Adiciona a mensagem ao modelo
         model.addAttribute("mensagem", mensagem);
-        try{
-        // Retorna a página correta com base na mensagem
-        if (mensagem.contains("Usuário verificado")) {
-            return "sucesso"; // Nome do arquivo HTML de sucesso
-        } else if(mensagem.contains("Usuário já cadastrado")) {
-            return "cadastrado"; // Nome do arquivo HTML para usuário cadastrado
-        }else{
-            return "expirado";
-        }
+
+        try {
+
+            if (mensagem.contains("Usuário verificado")) {
+                return "sucesso";// Nome do arquivo HTML de sucesso
+            } else if (mensagem.contains("Usuário já cadastrado")) {
+                return "cadastrado";
+            } else if (mensagem.contains("Tempo de verificação expirado. Um novo link foi enviado para o seu e-mail.")) {
+                return "expirado";
+            } else {
+                return "erro";
+            }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            // Loga a exceção para facilitar o diagnóstico
+            logger.error("Erro ao verificar cadastro para o uuid: " + uuid, e);
+            model.addAttribute("erro", "Ocorreu um erro ao verificar o cadastro. Tente novamente.");
+            return "erro";
         }
     }
+
 }

@@ -58,9 +58,14 @@ public class UserService {
     @Autowired
     private JavaMailSender emailSender;
 
-    public Map<String, String> codigosDeRecuperacao = new HashMap<>();
-   
 
+
+    public Map<String, String> codigosDeRecuperacao = new HashMap<>();
+
+    private final String urlServidor = "https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/";
+    private final String urlServicoEmail = "codigocadastro/verificarcadastro/";
+  //  private final String local = "http://localhost:8080/";
+    private final String urlServico = urlServidor + urlServicoEmail;
 
     @Transactional
     public void delete(UUID id) {
@@ -202,50 +207,72 @@ public class UserService {
     }
 
     public String verificarCadastro(String uuid) {
+        // Validação do UUID
         if (uuid == null || uuid.length() != 36) {
             return "UUID inválido";
         }
 
-        Optional<UserVerificador> userVerificadorOptional = userVerificadorRepository.findByUuid(UUID.fromString(uuid));
+        try {
+            UUID uuidParsed = UUID.fromString(uuid);
 
-        if (userVerificadorOptional.isPresent()) {
-            UserVerificador usuarioVerificacao = userVerificadorOptional.get();
-            Instant agora = Instant.now();
+            // Recupera o usuário verificando a existência do UUID
+            Optional<UserVerificador> userVerificadorOptional = userVerificadorRepository.findByUuid(uuidParsed);
 
-            if (usuarioVerificacao.getDataExpiracao().isAfter(agora)) {
+            if (userVerificadorOptional.isPresent()) {
+                UserVerificador usuarioVerificacao = userVerificadorOptional.get();
                 User user = usuarioVerificacao.getUser();
+                Instant agora = Instant.now();
 
-                if (user.isSituacao()) {
-                    //userVerificadorRepository.delete(usuarioVerificacao);
-                    return "Usuário já cadastrado";
+                // Verifica se a data de expiração não foi ultrapassada
+                if (usuarioVerificacao.getDataExpiracao().isAfter(agora)) {
+                    // Verifica a situação do usuário
+                    if (user.isSituacao()) {
+                        return "Usuário já cadastrado";
+                    }
+
+                    // Ativa o usuário e persiste no banco
+                    user.setSituacao(true);
+                    userRepository.save(user);
+
+                    return "Usuário verificado. Por favor, retorne ao site.";
+                } else {
+                    // Remove o registro expirado e cria um novo
+                    userVerificadorRepository.delete(usuarioVerificacao);
+
+                    // Gera um novo UUID e uma nova data de expiração
+                    UUID novoUuid = UUID.randomUUID();
+                    Instant novaDataExpiracao = Instant.now().plus(1, ChronoUnit.MINUTES);
+
+                    UserVerificador novoUserVerificador = new UserVerificador();
+                    novoUserVerificador.setUuid(novoUuid);
+                    novoUserVerificador.setDataExpiracao(novaDataExpiracao);
+                    novoUserVerificador.setUser(user);
+
+                    // Salva o novo link de verificação
+                    userVerificadorRepository.save(novoUserVerificador);
+
+                    if(user.isSituacao()) {
+                        return "Usuário já cadastrado";
+                    }
+                    enviarNovoLink(user.getEmail(), novoUuid);
+
+                    return "Tempo de verificação expirado. Um novo link foi enviado para o seu e-mail.";
                 }
-                user.setSituacao(true);
-                userRepository.save(user);
-                //userVerificadorRepository.delete(usuarioVerificacao);
-                return "Usuário verificado. Por favor, retorne ao site.";
             } else {
-                userVerificadorRepository.delete(usuarioVerificacao);
-
-                UUID novoUuid = UUID.randomUUID();
-                Instant novaDataExpiracao = Instant.now().plus(6000, ChronoUnit.SECONDS);
-
-                UserVerificador novoUserVerificador = new UserVerificador();
-                novoUserVerificador.setUuid(novoUuid);
-                novoUserVerificador.setDataExpiracao(novaDataExpiracao);
-                novoUserVerificador.setUser(usuarioVerificacao.getUser());
-
-                userVerificadorRepository.save(novoUserVerificador);
-
-                enviarNovoLink(usuarioVerificacao.getUser().getEmail(), novoUuid);
-
-                return "Tempo de verificação expirado. Um novo link foi enviado para o seu e-mail.";
+                return "Usuário não encontrado";
             }
-        } else {
-            return "Usuário não encontrado";
+        } catch (IllegalArgumentException e) {
+            return "UUID inválido";
+        } catch (Exception e) {
+            // Log de erro e resposta genérica
+            logger.error("Erro ao verificar cadastro para UUID: {}", uuid, e);
+            return "Erro interno. Por favor, tente novamente mais tarde.";
         }
     }
 
-    @Scheduled(fixedRate = 900000)
+
+    //86400000
+    @Scheduled(fixedRate = 3600000)
     public void LimparVerificadores() {
         Instant agora = Instant.now();
         List<UserVerificador> expirados = userVerificadorRepository.findByDataExpiracaoBefore(agora);
@@ -255,19 +282,8 @@ public class UserService {
     }
 
     @Transactional
-    public UserCadastroDTO Cadastro(@Valid UserCadastroDTO userCadastroDTO) {
-        if (userCadastroDTO.getSenha() == null || userCadastroDTO.getSenha().length() < 8) {
-            throw new IllegalArgumentException("A senha deve ter pelo menos 8 caracteres.");
-        }
-        if (userRepository.existsByEmail(userCadastroDTO.getEmail())) {
-            throw new IllegalArgumentException("Já existe um usuário com este E-mail.");
-        }
-        if (userRepository.existsByCpf(userCadastroDTO.getCpf())) {
-            throw new IllegalArgumentException("Já existe um usuário com este CPF.");
-        }
-        if (userRepository.existsByTelefone(userCadastroDTO.getTelefone())) {
-            throw new IllegalArgumentException("Já existe um usuário com este Telefone.");
-        }
+    public UserCadastroDTO cadastro(@Valid UserCadastroDTO userCadastroDTO) {
+        validarCadastro(userCadastroDTO);
 
         String encodedPassword = passwordEncoder.encode(userCadastroDTO.getSenha());
         User user = new User(userCadastroDTO);
@@ -277,63 +293,126 @@ public class UserService {
         user.setEndereco(endereco);
 
         Perfil userPerfil = perfilRepository.findByAuthority("CLIENT")
-                .orElseThrow(() -> new RuntimeException("Perfil não cadastrado"));
+                .orElseThrow(() -> new RuntimeException("Perfil 'CLIENT' não cadastrado"));
         user.getAuthorities().add(userPerfil);
 
         userRepository.save(user);
+
+        // Criar e salvar o verificador de usuário
+        UserVerificador userVerificador = criarUserVerificador(user);
+
+        // Enviar email de boas-vindas
+        enviarEmailBoasVindas(user, userVerificador);
+
+        return new UserCadastroDTO(user);
+    }
+    @Transactional
+    private void validarCadastro(UserCadastroDTO userCadastroDTO) {
+        if (userCadastroDTO.getSenha() == null || userCadastroDTO.getSenha().length() < 8) {
+            throw new IllegalArgumentException("A senha deve ter pelo menos 8 caracteres.");
+        }
+
+        if (userRepository.existsByEmail(userCadastroDTO.getEmail())) {
+            throw new IllegalArgumentException("Já existe um usuário com este E-mail.");
+        }
+
+        if (userRepository.existsByCpf(userCadastroDTO.getCpf())) {
+            throw new IllegalArgumentException("Já existe um usuário com este CPF.");
+        }
+
+        if (userRepository.existsByTelefone(userCadastroDTO.getTelefone())) {
+            throw new IllegalArgumentException("Já existe um usuário com este Telefone.");
+        }
+    }
+
+    private UserVerificador criarUserVerificador(User user) {
         UserVerificador userVerificador = new UserVerificador();
         userVerificador.setUser(user);
         userVerificador.setUuid(UUID.randomUUID());
-        userVerificador.setDataExpiracao(Instant.now().plusMillis(3600000));
+        userVerificador.setDataExpiracao(Instant.now().plus(1 ,ChronoUnit.MINUTES));
         userVerificadorRepository.save(userVerificador);
-
-        String urlServidor = "https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/";
-
-        //String urlLocalHost="http://localhost:8080/";
-
-        String urlDominio = urlServidor;
-
-        String urlServicoEmail = "codigocadastro/verificarcadastro/";
-
-        String url =urlServidor+urlServicoEmail ;
-
-        emailService.enviarEmailHtml(
-                user.getEmail(),
-                "Alex Costa ESPORT - Seja Bem-Vindo!!",
-                "<div style='font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f9f9f9; border-radius: 15px; max-width: 600px; margin: auto; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);'>" +
-                        "<header style='background: linear-gradient(135deg, #1a1a1a, #333333); padding: 20px; border-radius: 15px 15px 0 0; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);'>" +
-                        "<h1 style='color: white; margin: 0; font-size: 2.5em; font-family: Georgia, serif; animation: fadeIn 1s;'>Alex Costa Esports</h1>" +
-                        "</header>" +
-                        "<section style='padding: 20px;'>" +
-                        "<p style='font-size: 18px; color: #333; margin: 20px 0; line-height: 1.6;'>Olá <strong>" + user.getNome() + "</strong>, seja bem-vindo! Estamos empolgados por você fazer parte da nossa comunidade. Meu nome é Alex, e estou aqui para garantir que sua experiência seja incrível.</p>" +
-                        "<p style='font-size: 16px; color: #555; line-height: 1.5;'>Para ativar seu cadastro, clique no botão abaixo:</p>" +
-                        "<a href='" + url + userVerificador.getUuid() + "' style='display: inline-block; padding: 15px 30px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);'>" +
-                        "Validar Cadastro" +
-                        "</a>" +
-                        "<p style='font-size: 14px; color: #777; margin-top: 15px; line-height: 1.4;'>Este link é válido por <strong>60 minutos</strong>. Caso não consiga acessá-lo dentro desse período, entre em contato conosco.</p>" +
-                        "</section>" +
-                        "<footer style='margin-top: 20px; padding: 15px; background-color: #f0f0f0; border-radius: 0 0 15px 15px; color: #999; font-size: 12px; line-height: 1.4;'>" +
-                        "© 2025 Alex Costa Esports. Todos os direitos reservados.<br>" +
-                        "Caso tenha dúvidas, entre em contato através do email <a href='mailto:thg6321@gmail.com' style='color: #28a745; text-decoration: none;'>suporte@alexcostaesports.com</a>." +
-                        "</footer>" +
-                        "<style>" +
-                        "@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }" +
-                        "a:hover { background-color: #218838; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); }" +
-                        "@media (max-width: 600px) {" +
-                        "h1 { font-size: 2em; }" +
-                        "p { font-size: 16px; }" +
-                        "a { padding: 12px 24px; }" +
-                        "}" +
-                        "</style>" +
-                        "</div>"
-        );
-        return new UserCadastroDTO(user);
+        return userVerificador;
     }
+
+    private void enviarEmailBoasVindas(User user, UserVerificador userVerificador) {
+        String conteudoEmail = criarConteudoEmail(user, userVerificador);
+        try {
+            emailService.enviarEmailHtml(
+                    user.getEmail(),
+                    "Alex Costa ESPORT - Seja Bem-Vindo!!",
+                    conteudoEmail
+            );
+        } catch (Exception e) {
+            logger.error("Erro ao enviar e-mail de boas-vindas para o usuário: " + user.getEmail(), e);
+            throw new RuntimeException("Erro ao enviar e-mail. Tente novamente.");
+        }
+    }
+
+    private String criarConteudoEmail(User user, UserVerificador userVerificador) {
+        return "<div style='font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f9f9f9; border-radius: 15px; max-width: 600px; margin: auto; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);'>" +
+                "<header style='background: linear-gradient(135deg, #1a1a1a, #333333); padding: 20px; border-radius: 15px 15px 0 0; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);'>" +
+                "<h1 style='color: white; margin: 0; font-size: 2.5em; font-family: Georgia, serif; animation: fadeIn 1s;'>Alex Costa Esports</h1>" +
+                "</header>" +
+                "<section style='padding: 20px;'>" +
+                "<p style='font-size: 18px; color: #333; margin: 20px 0; line-height: 1.6;'>Olá <strong>" + user.getNome() + "</strong>, seja bem-vindo! Estamos empolgados por você fazer parte da nossa comunidade. Meu nome é Alex, e estou aqui para garantir que sua experiência seja incrível.</p>" +
+                "<p style='font-size: 16px; color: #555; line-height: 1.5;'>Para ativar seu cadastro, clique no botão abaixo:</p>" +
+                "<a href='" + urlServico + userVerificador.getUuid() + "' style='display: inline-block; padding: 15px 30px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);'>" +
+                "Validar Cadastro" +
+                "</a>" +
+                "<p style='font-size: 14px; color: #777; margin-top: 15px; line-height: 1.4;'>Este link é válido por <strong>60 minutos</strong>. Caso não consiga acessá-lo dentro desse período, entre em contato conosco.</p>" +
+                "</section>" +
+                "<footer style='margin-top: 20px; padding: 15px; background-color: #f0f0f0; border-radius: 0 0 15px 15px; color: #999; font-size: 12px; line-height: 1.4;'>" +
+                "© 2025 Alex Costa Esports. Todos os direitos reservados.<br>" +
+                "Caso tenha dúvidas, entre em contato através do email <a href='mailto:thg6321@gmail.com' style='color: #28a745; text-decoration: none;'>suporte@alexcostaesports.com</a>." +
+                "</footer>" +
+                "<style>" +
+                "@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }" +
+                "a:hover { background-color: #218838; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); }" +
+                "@media (max-width: 600px) {" +
+                "h1 { font-size: 2em; }" +
+                "p { font-size: 16px; }" +
+                "a { padding: 12px 24px; }" +
+                "}" +
+                "</style>" +
+                "</div>";
+    }
+
+
 
     @Transactional
     private void enviarNovoLink(String email, UUID novoUuid) {
-        String url = "https://exceptional-cathi-alevivaldi-fe38a61b.koyeb.app/codigocadastro/verificarcadastro/" + novoUuid.toString();
-        String htmlContent = "<html>" +
+
+        try {
+            // Gerar conteúdo HTML do e-mail
+            String htmlContent = criarConteudoEmailDeRecuperacao(novoUuid);
+
+            // Criar o MimeMessage
+            MimeMessage mimeMessage = emailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);  // Não é mais necessário try-with-resources
+
+            try {
+                // Configurar e enviar o e-mail
+                helper.setTo(email);
+                helper.setSubject("Novo Link de Verificação");
+                helper.setText(htmlContent, true);  // O conteúdo HTML gerado é passado para o helper
+                emailSender.send(mimeMessage);  // Envia o e-mail
+
+            } catch (MessagingException e) {
+                logger.error("Erro ao criar ou enviar e-mail para: " + email, e);
+                throw new RuntimeException("Erro ao enviar o e-mail de verificação. Tente novamente.");
+            }
+
+        } catch (Exception e) {
+            logger.error("Erro ao preparar o e-mail de verificação para: " + email, e);
+            throw new RuntimeException("Erro interno. Tente novamente.");
+        }
+    }
+
+
+
+    private String criarConteudoEmailDeRecuperacao(UUID novoUuid) {
+        String url = urlServico + novoUuid.toString();
+        return "<html>" +
                 "<head>" +
                 "<style>" +
                 "body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f0f0; }" +
@@ -360,24 +439,8 @@ public class UserService {
                 "</div>" +
                 "</body>" +
                 "</html>";
-
-        MimeMessage mimeMessage = emailSender.createMimeMessage();
-        MimeMessageHelper helper = null;
-        try {
-            helper = new MimeMessageHelper(mimeMessage, true);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            helper.setTo(email);
-            helper.setSubject("Novo Link de Verificação");
-            helper.setText(htmlContent, true);
-            emailSender.send(mimeMessage);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
     }
+
 
 
     public User encontrarUsuarioPorEmailECpf(String email, String cpf) {
@@ -387,28 +450,60 @@ public class UserService {
     public User encontrarUsuarioPorEmail(String email) {
         return userRepository.findByEmail(email);
     }
-
+    @Transactional
     public void atualizarSenhaRecuperada(UUID userId, String novaSenha) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        // Valida se a nova senha possui pelo menos 8 caracteres
+        if (novaSenha == null || novaSenha.length() < 8) {
+            throw new IllegalArgumentException("A nova senha deve ter pelo menos 8 caracteres.");
+        }
 
-        // Criptografa a nova senha antes de salvar
-        String senhaCriptografada = passwordEncoder.encode(novaSenha);
-        user.setSenha(senhaCriptografada);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário com ID " + userId + " não encontrado"));
 
-        userRepository.save(user);
-    }
+        try {
+            String senhaCriptografada = passwordEncoder.encode(novaSenha);
+            user.setSenha(senhaCriptografada);
 
-    public void recuperarSenha(String codigo, String novaSenha) {
-        String email = codigosDeRecuperacao.get(codigo);
-        if (email != null) {
-            User user = userRepository.findByEmail(email);
-            if (user != null) {
-                String senhaCriptografada = passwordEncoder.encode(novaSenha);
-                user.setSenha(senhaCriptografada);
-                userRepository.save(user);
-            }
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar a senha do usuário.", e);
         }
     }
+
+    @Transactional
+    public void recuperarSenha(String codigo, String novaSenha) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            throw new IllegalArgumentException("O código de recuperação não pode ser nulo ou vazio.");
+        }
+
+        if (novaSenha == null || novaSenha.length() < 8) {
+            throw new IllegalArgumentException("A nova senha deve ter pelo menos 8 caracteres.");
+        }
+
+        String email = codigosDeRecuperacao.get(codigo);
+
+        if (email == null) {
+            throw new IllegalArgumentException("Código de recuperação inválido ou expirado.");
+        }
+
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new IllegalArgumentException("Usuário não encontrado para o e-mail informado.");
+        }
+
+        try {
+
+            String senhaCriptografada = passwordEncoder.encode(novaSenha);
+            user.setSenha(senhaCriptografada);
+
+            userRepository.save(user);
+
+        } catch (Exception e) {
+
+            throw new RuntimeException("Erro ao atualizar a senha. Tente novamente.", e);
+        }
+    }
+
 }
 
 

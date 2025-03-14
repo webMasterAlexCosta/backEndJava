@@ -45,7 +45,7 @@ public class UsuarioControle {
 
     @PostMapping("/cadastro")
     public ResponseEntity<UserCadastroDTO> inserirCadastro(@Valid @RequestBody UserCadastroDTO userCadastroDTO) {
-        UserCadastroDTO user = service.Cadastro(userCadastroDTO);
+        UserCadastroDTO user = service.cadastro(userCadastroDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(uri).body(user);
     }

@@ -138,40 +138,28 @@ public class AutenticacaoController {
        return ResponseEntity.ok(new DadosTokenJWT(token));
    }
    //aqui o formato é x-www-form
-   @PostMapping("/cliente3")
-   public ResponseEntity<DadosTokenJWT> efetuarLogin3(@RequestParam DadosAutenticacao email, @RequestParam DadosAutenticacao senha) {
-       // Criação dos dados de autenticação com email e senha
-       var dados = new DadosAutenticacao(email.email(), senha.senha());
 
-       // Criação do token de autenticação com as credenciais do usuário
-       var authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
+    @PostMapping("/cliente3")
+    public ResponseEntity<DadosTokenJWT> efetuarLogin3(@RequestParam String email, @RequestParam String senha) {
+        var dados = new DadosAutenticacao(email, senha);
 
-       // Autenticação do usuário
-       var authentication = authenticationManager.authenticate(authenticationToken);
+        var authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
 
-       // Obtenção do usuário autenticado
-       UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        var authentication = authenticationManager.authenticate(authenticationToken);
 
-       // Carrega o usuário do banco de dados usando o serviço de UserDetails
-       User user = (User) userDetailsService.loadUserByUsername(userDetails.getUsername());
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-       // Verifica se o usuário está ativo
-       if (!user.isSituacao()) {
-           throw new RuntimeException("Usuário não ativou seu cadastro. Acesse seu e-mail e ative seu cadastro.");
-       }
+        User user = (User) userDetailsService.loadUserByUsername(userDetails.getUsername());
 
-       // Geração do token JWT
-       String token = tokenServices.gerarToken(user);
+        if (!user.isSituacao()) {
+            throw new RuntimeException("Usuário não ativou seu cadastro. Acesse seu e-mail e ative seu cadastro.");
+        }
 
-       // Retorna a resposta com o token gerado
-       return ResponseEntity.ok(new DadosTokenJWT(token));
-   }
+        String token = tokenServices.gerarToken(user);
 
+        return ResponseEntity.ok(new DadosTokenJWT(token));
+    }
 
-//    @GetMapping(value="/verificarCadastro/{uuid}")
-//    public String verificarCadastro(@PathVariable("uuid") String uuid){
-//       return userService.verificarCadastro(uuid);
-//    }
 
 
 }
