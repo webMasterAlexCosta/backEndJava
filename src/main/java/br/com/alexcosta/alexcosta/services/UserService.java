@@ -241,7 +241,7 @@ public class UserService {
 
                     // Gera um novo UUID e uma nova data de expiração
                     UUID novoUuid = UUID.randomUUID();
-                    Instant novaDataExpiracao = Instant.now().plus(1, ChronoUnit.MINUTES);
+                    Instant novaDataExpiracao = Instant.now().plus(2, ChronoUnit.MINUTES);
 
                     UserVerificador novoUserVerificador = new UserVerificador();
                     novoUserVerificador.setUuid(novoUuid);
@@ -329,7 +329,7 @@ public class UserService {
         UserVerificador userVerificador = new UserVerificador();
         userVerificador.setUser(user);
         userVerificador.setUuid(UUID.randomUUID());
-        userVerificador.setDataExpiracao(Instant.now().plus(1 ,ChronoUnit.MINUTES));
+        userVerificador.setDataExpiracao(Instant.now().plus(2 ,ChronoUnit.MINUTES));
         userVerificadorRepository.save(userVerificador);
         return userVerificador;
     }
@@ -359,7 +359,7 @@ public class UserService {
                 "<a href='" + urlServico + userVerificador.getUuid() + "' style='display: inline-block; padding: 15px 30px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);'>" +
                 "Validar Cadastro" +
                 "</a>" +
-                "<p style='font-size: 14px; color: #777; margin-top: 15px; line-height: 1.4;'>Este link é válido por <strong>60 minutos</strong>. Caso não consiga acessá-lo dentro desse período, entre em contato conosco.</p>" +
+                "<p style='font-size: 14px; color: #777; margin-top: 15px; line-height: 1.4;'>Este link é válido por <strong>10 minutos</strong>. Caso não consiga acessá-lo dentro desse período, entre em contato conosco.</p>" +
                 "</section>" +
                 "<footer style='margin-top: 20px; padding: 15px; background-color: #f0f0f0; border-radius: 0 0 15px 15px; color: #999; font-size: 12px; line-height: 1.4;'>" +
                 "© 2025 Alex Costa Esports. Todos os direitos reservados.<br>" +
@@ -415,12 +415,12 @@ public class UserService {
         return "<html>" +
                 "<head>" +
                 "<style>" +
-                "body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f0f0; }" +
-                ".container { max-width: 600px; margin: auto; padding: 20px; background-color: #ffffff; border-radius: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }" +
-                "header { background: linear-gradient(135deg, #050505, #dfe4e5); padding: 20px; border-radius: 10px 10px 0 0; text-align: center; }" +
+                "body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center; height: 100vh; }" +
+                ".container { max-width: 600px; width: 100%; padding: 20px; background-color: #ffffff; border-radius: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); text-align: center; }" +
+                "header { background: linear-gradient(135deg, #050505, #dfe4e5); padding: 20px; border-radius: 10px 10px 0 0; }" +
                 "h1 { color: white; margin: 0; font-size: 2.5em; }" +
-                "p { font-size: 16px; color: #333; }" +
-                "a.button { display: inline-block; padding: 12px 24px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background-color 0.3s; }" +
+                "p { font-size: 16px; color: #333; margin: 10px 0; }" +
+                "a.button { display: inline-block; padding: 12px 24px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background-color 0.3s; margin-top: 20px; }" +
                 "a.button:hover { background-color: #218838; }" +
                 "footer { margin-top: 20px; text-align: center; color: #999; font-size: 14px; }" +
                 "</style>" +
@@ -440,6 +440,7 @@ public class UserService {
                 "</body>" +
                 "</html>";
     }
+
 
 
 
