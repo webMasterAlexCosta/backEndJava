@@ -13,16 +13,16 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173/","https://alexcosta.vercel.app/")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true);
+        registry.addMapping("/api/**") // Aplica CORS apenas para endpoints sob /api
+                .allowedOrigins("http://localhost:5173", "https://alexcosta.vercel.app") // Permite apenas o frontend
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS") // Métodos permitidos
+                .allowedHeaders("Content-Type", "Authorization") // Cabeçalhos permitidos
+                .allowCredentials(true); // Permite credenciais (cookies, tokens)
     }
+
     @Bean
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-       // resolver.setPrefix("classpath:/resources/templates/");
         resolver.setPrefix("classpath:/templates/");
         resolver.setSuffix(".html");
         return resolver;
