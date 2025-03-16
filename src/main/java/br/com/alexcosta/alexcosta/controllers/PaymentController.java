@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/payment")
@@ -24,31 +25,14 @@ public class PaymentController {
 
     // Processar Pagamento com Cartão de Crédito/Débito
     @PostMapping("/credit-card")
-    public String processCreditCardPayment(@RequestBody PaymentRequest request) {
+    public ResponseEntity<Map<String, Object>> processCreditCardPayment(@RequestBody PaymentRequest request) {
         try {
             // Validação dos campos obrigatórios
-            if (request.getTransactionAmount() == null || request.getTransactionAmount().isEmpty()) {
-                return "Erro: transactionAmount é obrigatório.";
+            if (request.getTransactionAmount() == null) {
+                return ResponseEntity.badRequest().body(Map.of("error", "transactionAmount é obrigatório."));
             }
             if (request.getToken() == null || request.getToken().isEmpty()) {
-                return "Erro: token é obrigatório.";
-            }
-            if (request.getDescription() == null || request.getDescription().isEmpty()) {
-                return "Erro: description é obrigatória.";
-            }
-            if (request.getInstallments() == null || request.getInstallments() <= 0) {
-                return "Erro: installments deve ser maior que zero.";
-            }
-            if (request.getPaymentMethodId() == null || request.getPaymentMethodId().isEmpty()) {
-                return "Erro: paymentMethodId é obrigatório.";
-            }
-            if (request.getPayer() == null || request.getPayer().getEmail() == null || request.getPayer().getEmail().isEmpty()) {
-                return "Erro: payer.email é obrigatório.";
-            }
-            if (request.getPayer().getIdentification() == null ||
-                    request.getPayer().getIdentification().getType() == null ||
-                    request.getPayer().getIdentification().getNumber() == null) {
-                return "Erro: payer.identification.type e payer.identification.number são obrigatórios.";
+                return ResponseEntity.badRequest().body(Map.of("error", "token é obrigatório."));
             }
 
             // Configura o token de acesso
@@ -75,10 +59,15 @@ public class PaymentController {
                             .build();
 
             var payment = client.create(paymentCreateRequest);
-            return "Pagamento realizado com sucesso! ID: " + payment.getId();
+
+            // Retorna uma resposta JSON
+            return ResponseEntity.ok(Map.of(
+                    "message", "Pagamento realizado com sucesso!",
+                    "paymentId", payment.getId()
+            ));
         } catch (MPException | MPApiException e) {
             e.printStackTrace();
-            return "Erro ao processar o pagamento: " + e.getMessage();
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -151,7 +140,7 @@ public class PaymentController {
 
     // Obter o Token do Cartão
     @PostMapping("/card-token")
-    public ResponseEntity<String> getCardToken(@RequestBody CardTokenRequest cardTokenRequest) {
+    public ResponseEntity<String> getCardToken(@RequestBody PaymentRequest cardTokenRequest) {
         try {
             RestTemplate restTemplate = new RestTemplate();
 
@@ -159,7 +148,7 @@ public class PaymentController {
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("Authorization", "Bearer " + accessToken);
 
-            HttpEntity<CardTokenRequest> request = new HttpEntity<>(cardTokenRequest, headers);
+            HttpEntity<PaymentRequest> request = new HttpEntity<>(cardTokenRequest, headers);
 
             ResponseEntity<String> response = restTemplate.postForEntity(
                     "https://api.mercadopago.com/v1/card_tokens",
@@ -175,96 +164,3 @@ public class PaymentController {
 
 }
 
-// Classe de requisição para o token do cartão
-class CardTokenRequest {
-    private String cardNumber;
-    private String securityCode;
-    private int expirationMonth;
-    private int expirationYear;
-    private Cardholder cardholder;
-
-    // Getters e Setters
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public String getSecurityCode() {
-        return securityCode;
-    }
-
-    public void setSecurityCode(String securityCode) {
-        this.securityCode = securityCode;
-    }
-
-    public int getExpirationMonth() {
-        return expirationMonth;
-    }
-
-    public void setExpirationMonth(int expirationMonth) {
-        this.expirationMonth = expirationMonth;
-    }
-
-    public int getExpirationYear() {
-        return expirationYear;
-    }
-
-    public void setExpirationYear(int expirationYear) {
-        this.expirationYear = expirationYear;
-    }
-
-    public Cardholder getCardholder() {
-        return cardholder;
-    }
-
-    public void setCardholder(Cardholder cardholder) {
-        this.cardholder = cardholder;
-    }
-
-    static class Cardholder {
-        private String name;
-        private Identification identification;
-
-        // Getters e Setters
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public Identification getIdentification() {
-            return identification;
-        }
-
-        public void setIdentification(Identification identification) {
-            this.identification = identification;
-        }
-
-        static class Identification {
-            private String type;
-            private String number;
-
-            // Getters e Setters
-            public String getType() {
-                return type;
-            }
-
-            public void setType(String type) {
-                this.type = type;
-            }
-
-            public String getNumber() {
-                return number;
-            }
-
-            public void setNumber(String number) {
-                this.number = number;
-            }
-        }
-    }
-}

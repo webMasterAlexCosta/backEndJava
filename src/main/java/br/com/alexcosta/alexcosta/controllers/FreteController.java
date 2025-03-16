@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/frete")
+@RequestMapping("/api/frete")
 public class FreteController {
 
     @Autowired

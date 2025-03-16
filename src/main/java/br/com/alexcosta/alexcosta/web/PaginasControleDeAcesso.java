@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -19,13 +20,14 @@ public class PaginasControleDeAcesso {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
 
-        @RequestMapping("/")
-    public ModelAndView index() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/publico/index.html");
-        return modelAndView;
-    }
-    @GetMapping(value = "/codigocadastro/verificarcadastro/{uuid}")
+//        @RequestMapping("/api")
+//    public ModelAndView index() {
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("redirect:/publico/index.html");
+//        return modelAndView;
+//    }
+
+    @GetMapping(value = "/api/codigocadastro/verificarcadastro/{uuid}")
     public String verificarCadastro(@PathVariable("uuid") String uuid, Model model) {
         String mensagem = userService.verificarCadastro(uuid);
 
@@ -51,4 +53,14 @@ public class PaginasControleDeAcesso {
         }
     }
 
+
+    // @PreAuthorize("hasAuthority('ADMIN')")
+    public String administrativo(){
+        return "/adminIndex.html";
+    }
+
+    @GetMapping("/loginAdmin")
+    public String login(){
+        return "loginAdmin.html";
+    }
 }

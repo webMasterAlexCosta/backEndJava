@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/api/login")
 public class AutenticacaoController {
 
     private static final Logger logger = LoggerFactory.getLogger(AutenticacaoController.class);

@@ -75,19 +75,19 @@
 
         private boolean isPublicRoute(HttpServletRequest request) {
             String uri = request.getRequestURI();
-            return uri.matches("/produtos/\\d+") ||
-                    uri.startsWith("/produtos/paginas") ||
-                    uri.startsWith("/produtos/lista") ||
-                    uri.startsWith("/login/cliente3")||
-                    uri.startsWith("/login/cliente")||
-                    uri.startsWith("/produtos/buscar") ||
+            return uri.matches("/api/produtos/\\d+") ||
+                    uri.startsWith("/api/produtos/paginas") ||
+                    uri.startsWith("/api/produtos/lista") ||
+                    uri.startsWith("/api/login/cliente3")||
+                    uri.startsWith("/api/login/cliente")||
+                    uri.startsWith("/api/produtos/buscar") ||
                     uri.startsWith("/api/payment") ||
                     uri.startsWith("https://api.mercadopago.com/v1/card_tokens/")||
-                    uri.startsWith("/usuarios/cadastro") ||
+                    uri.startsWith("/api/usuarios/cadastro") ||
 
-                    uri.startsWith("/publico") ||
+                    uri.startsWith("/api/publico") ||
                     uri.startsWith("/api/recuperacao/solicitar") ||
-                    uri.startsWith("/codigocadastro/verificarcadastro");
+                    uri.startsWith("/api/codigocadastro/verificarcadastro");
         }
 
         private String recuperarToken(HttpServletRequest request) {

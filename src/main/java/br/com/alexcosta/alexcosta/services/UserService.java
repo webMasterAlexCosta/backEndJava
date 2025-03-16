@@ -62,9 +62,9 @@ public class UserService {
 
     public Map<String, String> codigosDeRecuperacao = new HashMap<>();
 
-   // private final String urlServidor = "https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/";
+   private final String urlServidor = "https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/";
     private final String urlServicoEmail = "codigocadastro/verificarcadastro/";
-    private final String urlServidor = "http://localhost:8080/";
+ //   private final String urlServidor = "http://localhost:8080/api/";
     private final String urlServico = urlServidor + urlServicoEmail;
 
     @Transactional
