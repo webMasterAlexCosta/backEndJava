@@ -82,7 +82,7 @@
                     uri.startsWith("/api/login/cliente")||
                     uri.startsWith("/api/produtos/buscar") ||
                     uri.startsWith("/api/payment") ||
-                    uri.startsWith("https://api.mercadopago.com/v1/card_tokens/")||
+                    uri.startsWith("/api/create-payment-intent")||
                     uri.startsWith("/api/usuarios/cadastro") ||
 
                     uri.startsWith("/api/publico") ||

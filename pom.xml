@@ -92,6 +92,12 @@
 			<artifactId>sdk-java</artifactId>
 			<version>2.1.29</version>
 		</dependency>
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>28.4.0</version> <!-- Verifique se essa versão está atualizada -->
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
