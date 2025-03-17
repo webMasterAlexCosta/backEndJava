@@ -1,5 +1,6 @@
 package br.com.alexcosta.alexcosta.services;
 
+import br.com.alexcosta.alexcosta.controllers.handler.ControllerExceptionHandler;
 import br.com.alexcosta.alexcosta.dto.*;
 import br.com.alexcosta.alexcosta.entities.Endereco;
 import br.com.alexcosta.alexcosta.entities.Perfil;
@@ -64,7 +65,7 @@ public class UserService {
 
    private final String urlServidor = "https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/api/";
     private final String urlServicoEmail = "codigocadastro/verificarcadastro/";
- //   private final String urlServidor = "http://localhost:8080/api/";
+ // private final String urlServidor = "http://localhost:8080/api/";
     private final String urlServico = urlServidor + urlServicoEmail;
 
     @Transactional
@@ -283,8 +284,20 @@ public class UserService {
 
     @Transactional
     public UserCadastroDTO cadastro(@Valid UserCadastroDTO userCadastroDTO) {
-        validarCadastro(userCadastroDTO);
+        // Verificar se já existe um usuário com o CPF, telefone ou e-mail fornecido
+        if (userRepository.existsByCpf(userCadastroDTO.getCpf())) {
+            throw new ControllerExceptionHandler.CpfAlreadyExistsException("Já existe um usuário cadastrado com este CPF.");
+        }
 
+        if (userRepository.existsByTelefone(userCadastroDTO.getTelefone())) {
+            throw new ControllerExceptionHandler.TelefoneAlreadyExistsException("Já existe um usuário cadastrado com este telefone.");
+        }
+
+        if (userRepository.existsByEmail(userCadastroDTO.getEmail())) {
+            throw new ControllerExceptionHandler.EmailAlreadyExistsException("Já existe um usuário cadastrado com este e-mail.");
+        }
+
+        // Continuação do processo de cadastro...
         String encodedPassword = passwordEncoder.encode(userCadastroDTO.getSenha());
         User user = new User(userCadastroDTO);
         user.setSenha(encodedPassword);
@@ -306,6 +319,8 @@ public class UserService {
 
         return new UserCadastroDTO(user);
     }
+
+
     @Transactional
     private void validarCadastro(UserCadastroDTO userCadastroDTO) {
         if (userCadastroDTO.getSenha() == null || userCadastroDTO.getSenha().length() < 8) {

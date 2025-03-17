@@ -3,10 +3,7 @@ package br.com.alexcosta.alexcosta.dto;
 import br.com.alexcosta.alexcosta.entities.Endereco;
 import br.com.alexcosta.alexcosta.entities.User;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -31,7 +28,9 @@ public class UserCadastroDTO {
 
     @NotBlank
     @Size(min = 11, max = 11, message = "O telefone precisa ter 11 caracteres")
+    @Pattern(regexp = "^(\\(\\d{2}\\)\\d{5}\\d{4}|\\d{11})$", message = "O telefone precisa estar no formato (XX) XXXXX-XXXX ou XXXXXXXXXXX")
     private String telefone;
+
 
     @Getter
     private LocalDate dataNascimento;
