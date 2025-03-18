@@ -94,7 +94,7 @@ public class TokenServices {
         try {
             var algoritmo = Algorithm.HMAC512(secret);
             JWT.require(algoritmo)
-                    .withIssuer("aplm")
+                    .withIssuer("alexcosta")
                     .build()
                     .verify(tokenJWT);
             return true;
@@ -105,7 +105,7 @@ public class TokenServices {
 
     private Instant dataExpiracao() {
         return LocalDateTime.now()
-                .plusMinutes(500) // Pode ser parametrizado futuramente
+                .plusMinutes(60) // Pode ser parametrizado futuramente
                 .toInstant(ZoneOffset.of("-03:00"));
     }
 

@@ -75,20 +75,20 @@
 
         private boolean isPublicRoute(HttpServletRequest request) {
             String uri = request.getRequestURI();
-            return uri.matches("/api/produtos/\\d+") ||
+            return uri.startsWith("/api/recuperacao/solicitar") || // Isso garante que a rota de recuperação de senha seja pública
+                    uri.startsWith("/api/publico") ||
+                    uri.startsWith("/api/usuarios/cadastro") ||
+                    uri.startsWith("/api/login/cliente") ||
+                    uri.startsWith("/api/login/cliente3") ||
+                    uri.matches("/api/produtos/\\d+") ||
                     uri.startsWith("/api/produtos/paginas") ||
                     uri.startsWith("/api/produtos/lista") ||
-                    uri.startsWith("/api/login/cliente3")||
-                    uri.startsWith("/api/login/cliente")||
                     uri.startsWith("/api/produtos/buscar") ||
                     uri.startsWith("/api/payment") ||
-                    uri.startsWith("/api/create-payment-intent")||
-                    uri.startsWith("/api/usuarios/cadastro") ||
-
-                    uri.startsWith("/api/publico") ||
-                    uri.startsWith("/api/recuperacao/solicitar") ||
+                    uri.startsWith("/api/create-payment-intent") ||
                     uri.startsWith("/api/codigocadastro/verificarcadastro");
         }
+
 
         private String recuperarToken(HttpServletRequest request) {
             return Optional.ofNullable(request.getHeader("Authorization"))

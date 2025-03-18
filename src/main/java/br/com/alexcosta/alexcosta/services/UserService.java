@@ -1,6 +1,7 @@
 package br.com.alexcosta.alexcosta.services;
 
 import br.com.alexcosta.alexcosta.controllers.handler.ControllerExceptionHandler;
+import br.com.alexcosta.alexcosta.controllers.handler.ResourceNotFoundExceptions;
 import br.com.alexcosta.alexcosta.dto.*;
 import br.com.alexcosta.alexcosta.entities.Endereco;
 import br.com.alexcosta.alexcosta.entities.Perfil;
@@ -10,13 +11,13 @@ import br.com.alexcosta.alexcosta.repositories.EnderecoRepository;
 import br.com.alexcosta.alexcosta.repositories.PerfilRepository;
 import br.com.alexcosta.alexcosta.repositories.UserRepository;
 import br.com.alexcosta.alexcosta.repositories.UserVerificadorRepository;
-import br.com.alexcosta.alexcosta.controllers.handler.ResourceNotFoundExceptions;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -28,9 +29,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -61,11 +59,11 @@ public class UserService {
 
 
 
-    public Map<String, String> codigosDeRecuperacao = new HashMap<>();
+    private Map<String, String> codigosDeRecuperacao = new HashMap<>();
 
    private final String urlServidor = "https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/api/";
     private final String urlServicoEmail = "codigocadastro/verificarcadastro/";
- // private final String urlServidor = "http://localhost:8080/api/";
+//  private final String urlServidor = "http://localhost:8080/api/";
     private final String urlServico = urlServidor + urlServicoEmail;
 
     @Transactional
@@ -466,6 +464,7 @@ public class UserService {
     public User encontrarUsuarioPorEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
     @Transactional
     public void atualizarSenhaRecuperada(UUID userId, String novaSenha) {
         // Valida se a nova senha possui pelo menos 8 caracteres
@@ -487,36 +486,26 @@ public class UserService {
     }
 
     @Transactional
-    public void recuperarSenha(String codigo, String novaSenha) {
-        if (codigo == null || codigo.trim().isEmpty()) {
-            throw new IllegalArgumentException("O código de recuperação não pode ser nulo ou vazio.");
+    public NovaSenhaDTO recuperarSenha(NovaSenhaDTO dto) {
+
+        if (dto.getNovaSenha() == null || dto.getNovaSenha().isEmpty()) {
+            throw new ControllerExceptionHandler.SenhaInvalidaException("A nova senha não pode ser vazia.");
         }
 
-        if (novaSenha == null || novaSenha.length() < 8) {
-            throw new IllegalArgumentException("A nova senha deve ter pelo menos 8 caracteres.");
+        User use = userRepository.findByEmail(dto.getEmail());
+        if (use == null) {
+            throw new ControllerExceptionHandler.SenhaInvalidaException("Usuário não encontrado.");
         }
 
-        String email = codigosDeRecuperacao.get(codigo);
+        if (dto.getEmail().equals(use.getEmail()) && passwordEncoder.matches(dto.getAntigaSenha(), use.getSenha())) {
+            String senhaCriptografada = passwordEncoder.encode(dto.getNovaSenha());
+            use.setSenha(senhaCriptografada);
 
-        if (email == null) {
-            throw new IllegalArgumentException("Código de recuperação inválido ou expirado.");
-        }
+            userRepository.save(use);
 
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new IllegalArgumentException("Usuário não encontrado para o e-mail informado.");
-        }
-
-        try {
-
-            String senhaCriptografada = passwordEncoder.encode(novaSenha);
-            user.setSenha(senhaCriptografada);
-
-            userRepository.save(user);
-
-        } catch (Exception e) {
-
-            throw new RuntimeException("Erro ao atualizar a senha. Tente novamente.", e);
+            return new NovaSenhaDTO();
+        } else {
+            throw new ControllerExceptionHandler.SenhaInvalidaException("A senha atual é inválida");
         }
     }
 

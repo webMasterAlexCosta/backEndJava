@@ -57,7 +57,7 @@ public class PedidoService {
 
         User user = userService.authenticated();
         pedido.setCliente(user);
-        pedido.setNumeroPedido(uuid.gerarUUId().toString());
+        pedido.setNumeroPedido("B&D"+uuid.gerarUUId().toString().substring(0,10));
 
         for (PedidoItemDTO itemDTO : pedidoRequest.getItems()) {
             if (itemDTO.getId() == null) {

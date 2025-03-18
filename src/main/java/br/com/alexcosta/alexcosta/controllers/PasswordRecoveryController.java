@@ -31,9 +31,9 @@ public class PasswordRecoveryController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
         }
 
-        String novaSenha = "alex" + UUID.randomUUID().toString().replace("-", "").substring(0, 10)
-        +"costa"+
-                UUID.randomUUID().toString().replace("-", "").substring(0, 25);
+        String novaSenha = "B&D - SISTEMA " + UUID.randomUUID().toString().replace("-", "").substring(0, 10)
+        +"ALEXCOSTA"+
+                UUID.randomUUID().toString().replace("-", "").substring(0, 20);
         userService.atualizarSenhaRecuperada(user.getId(), novaSenha);
 
         // Enviar email com a nova senha
@@ -75,28 +75,12 @@ public class PasswordRecoveryController {
         );
         ;
 
-        return ResponseEntity.ok("Email enviado com a nova senha.");
+        return ResponseEntity.ok("Email enviado para: " + user.getEmail() + " com a nova senha.");
     }
 
     @PostMapping("/alterar")
-    public ResponseEntity<String> recuperarSenha(@RequestBody NovaSenhaDTO dto, @RequestParam String codigo) {
-        String email = userService.codigosDeRecuperacao.get(codigo);
-        if (email == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Código inválido ou expirado.");
-        }
-
-        User user = userService.encontrarUsuarioPorEmail(email);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
-        }
-
-        userService.recuperarSenha(codigo, dto.getNovaSenha());
-
-        emailService.enviarEmailHtml(
-                user.getEmail(),
-                "Senha Alterada",
-                "Sua senha foi alterada com sucesso."
-        );
+    public ResponseEntity<String> recuperarSenha(@RequestBody NovaSenhaDTO dto) {
+        NovaSenhaDTO  novaSenha = userService.recuperarSenha(dto);
 
         return ResponseEntity.ok("Senha alterada com sucesso.");
 

@@ -165,4 +165,10 @@ public class ControllerExceptionHandler {
             super(message);
         }
     }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public static class SenhaInvalidaException extends RuntimeException {
+        public SenhaInvalidaException(String message) {
+            super(message);
+        }
+    }
 }
