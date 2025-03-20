@@ -53,6 +53,17 @@ public class UsuarioControle {
         return ResponseEntity.ok(user);
     }
 
+    @PutMapping("/{id}/foto")
+    public ResponseEntity<String> updateFoto(@PathVariable UUID id, @Valid @RequestBody String foto) {
+        String user = service.updateFoto(id, foto);
+        return ResponseEntity.ok(user);
+    }
+    @GetMapping("/{id}/foto")
+    public ResponseEntity<String> getFoto(@PathVariable UUID id ){
+        String user = service.getFoto(id);
+        return ResponseEntity.ok(user);
+    }
+
     @PatchMapping("/{id}/senha")
     public ResponseEntity<String> updateSenha(@PathVariable UUID id, @RequestBody @Valid UpdateSenha dto) {
         try {
@@ -64,6 +75,8 @@ public class UsuarioControle {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar a senha");
         }
     }
+
+
 
     @PatchMapping("/{id}/email")
     public ResponseEntity<String> updateEmail(@PathVariable UUID id, @Valid @RequestBody UserDTO dto) {

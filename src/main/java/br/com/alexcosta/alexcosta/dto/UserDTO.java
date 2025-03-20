@@ -32,6 +32,7 @@ public class UserDTO {
 
     private LocalDate dataNascimento;
 
+    private String foto;
 
 
     @NotNull(message = "Endereco não pode ser nulo")
@@ -51,6 +52,7 @@ public class UserDTO {
         this.endereco = endereco;
     }
 
+
     public UserDTO( User user) {
         this.id = user.getId();
         this.nome = user.getNome();
@@ -58,6 +60,11 @@ public class UserDTO {
         this.telefone = user.getTelefone();
         this.dataNascimento = user.getDataNascimento();
         this.endereco = user.getEndereco();
+        this.foto = user.getFoto();
+    }
+
+    public UserDTO(String foto) {
+        this.foto = foto;
     }
 
     public UserDTO(Endereco endereco) {

@@ -64,7 +64,7 @@ public class UserService {
 
     private final String urlServidor = "https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/api/";
     private final String urlServicoEmail = "codigocadastro/verificarcadastro/";
-   // private final String urlServidor = "http://localhost:8080/api/";
+ //   private final String urlServidor = "http://localhost:8080/api/";
     private final String urlServico = urlServidor + urlServicoEmail;
 
     @Transactional
@@ -508,6 +508,28 @@ public class UserService {
         } else {
             throw new ControllerExceptionHandler.SenhaInvalidaException("A senha atual é inválida");
         }
+    }
+
+    @Transactional
+    public String updateFoto(UUID id, String foto) {
+        // Recupera o usuário pelo id
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        // Atualiza a URL da foto
+        user.setFoto(foto); // Supondo que você tenha um campo fotoPerfil no UserDTO e User
+
+        // Salva a alteração no banco de dados
+        userRepository.save(user);
+
+        // Retorna uma mensagem ou algum valor indicativo de sucesso
+        return "Foto atualizada com sucesso";
+    }
+
+    public String getFoto(UUID id) {
+        User user = userRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    return user.getFoto();
     }
 
 }

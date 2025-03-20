@@ -4,6 +4,8 @@ import br.com.alexcosta.alexcosta.dto.UserCadastroDTO;
 import br.com.alexcosta.alexcosta.dto.UserDTO;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.validation.constraints.Email;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +40,9 @@ public class User implements UserDetails {
 	@CPF
 	private String cpf;
 
+	@Getter
+	@Setter
+	private String foto;
 
 	private boolean situacao=false;
 
@@ -56,15 +61,18 @@ public class User implements UserDetails {
 	private Set<Perfil> authorities = new HashSet<>();
 
 
+
+
 	public User(UserDTO user) {
 		nome = user.getNome();
 		email = user.getEmail().toLowerCase();
 		telefone = user.getTelefone();
 		dataNascimento = user.getDataNascimento();
 		endereco = user.getEndereco();
+
 	}
 
-	public User(UUID id, String nome, String email, String telefone, LocalDate dataNascimento, String senha, Endereco endereco) {
+	public User(UUID id, String nome, String email, String telefone, LocalDate dataNascimento, String senha, Endereco endereco ,String foto) {
 		this.id = UUID.randomUUID();
 		this.nome = nome;
 		this.email = email.toLowerCase();
@@ -72,6 +80,7 @@ public class User implements UserDetails {
 		this.dataNascimento = dataNascimento;
 		this.senha = senha;
 		this.endereco = endereco;
+		this.foto = foto;
 
 	}
 
