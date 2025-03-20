@@ -19,8 +19,6 @@ import java.util.UUID;
 @NoArgsConstructor@AllArgsConstructor
 public class UserPerfilDTO {
 
-    @Getter
-    private UUID id;
 
     @Size(min = 3, max = 50, message = "O nome de usuario precisa ter entre 3 a 50 caracteres")
     private String nome;
@@ -31,10 +29,6 @@ public class UserPerfilDTO {
 
     @Size(min = 11, max = 11, message = "O telefone precisa ter 11 caracteres")
     private String telefone;
-
-    @CPF
-    @Getter
-    private String cpf;
 
     @Getter
     private LocalDate dataNascimento;
@@ -47,13 +41,13 @@ public class UserPerfilDTO {
     private Endereco endereco;
 
     public UserPerfilDTO(User user) {
-        this.id = user.getId();
+
         this.nome = user.getNome();
         this.email = user.getEmail();
         this.telefone = user.getTelefone();
         this.dataNascimento = user.getDataNascimento();
         this.endereco = user.getEndereco();
-        this.cpf= user.getCpf();
+
         for(GrantedAuthority role: user.getAuthorities()){
             perfis.add(role.getAuthority());
         }

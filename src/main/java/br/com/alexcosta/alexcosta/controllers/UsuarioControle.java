@@ -1,9 +1,6 @@
 package br.com.alexcosta.alexcosta.controllers;
 
-import br.com.alexcosta.alexcosta.dto.EnderecoDTO;
-import br.com.alexcosta.alexcosta.dto.UpdateSenha;
-import br.com.alexcosta.alexcosta.dto.UserCadastroDTO;
-import br.com.alexcosta.alexcosta.dto.UserDTO;
+import br.com.alexcosta.alexcosta.dto.*;
 import br.com.alexcosta.alexcosta.services.UserService;
 import br.com.alexcosta.alexcosta.controllers.handler.ResourceNotFoundExceptions;
 import jakarta.validation.Valid;
