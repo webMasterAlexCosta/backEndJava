@@ -19,8 +19,7 @@ public class User implements UserDetails {
 
 
 	@Id
-	@GeneratedValue(generator = "UUID")
-	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 
@@ -59,7 +58,7 @@ public class User implements UserDetails {
 
 	public User(UserDTO user) {
 		nome = user.getNome();
-		email = user.getEmail();
+		email = user.getEmail().toLowerCase();
 		telefone = user.getTelefone();
 		dataNascimento = user.getDataNascimento();
 		endereco = user.getEndereco();
@@ -68,7 +67,7 @@ public class User implements UserDetails {
 	public User(UUID id, String nome, String email, String telefone, LocalDate dataNascimento, String senha, Endereco endereco) {
 		this.id = UUID.randomUUID();
 		this.nome = nome;
-		this.email = email;
+		this.email = email.toLowerCase();
 		this.telefone = telefone;
 		this.dataNascimento = dataNascimento;
 		this.senha = senha;
@@ -78,7 +77,7 @@ public class User implements UserDetails {
 
 	public User(UserCadastroDTO user) {
 		nome = user.getNome();
-		email = user.getEmail();
+		email = user.getEmail().toLowerCase();
 		telefone = user.getTelefone();
 		dataNascimento = user.getDataNascimento();
 		senha = user.getSenha();
@@ -89,7 +88,7 @@ public class User implements UserDetails {
 	public User(UUID id, String nome, String email, String telefone, LocalDate dataNascimento, String senha, String cpf, Endereco endereco) {
 		this.id =UUID.randomUUID();
 		this.nome = nome;
-		this.email = email;
+		this.email = email.toLowerCase();
 		this.telefone = telefone;
 		this.dataNascimento = dataNascimento;
 		this.senha = senha;

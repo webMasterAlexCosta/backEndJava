@@ -28,35 +28,35 @@ public class TokenServices {
         try {
             Algorithm algoritmo = Algorithm.HMAC512(secret);
 
-            List<String> perfis = usuario.getAuthorities()
-                    .stream()
-                    .map(Perfil::getAuthority)
-                    .toList();
-
-            Map<String, Object> enderecoMap = new HashMap<>();
-            if (usuario.getEndereco() != null) {
-                Endereco endereco = usuario.getEndereco();
-                enderecoMap.put("logradouro", endereco.getLogradouro());
-                enderecoMap.put("numero", endereco.getNumero());
-                enderecoMap.put("bairro", endereco.getBairro());
-                enderecoMap.put("cidade", endereco.getCidade());
-                enderecoMap.put("uf", endereco.getUf());
-                enderecoMap.put("cep", endereco.getCep());
-                enderecoMap.put("complemento", endereco.getComplemento());
-            } else {
-                enderecoMap.put("mensagem", "Endereço não cadastrado");
-            }
+//            List<String> perfis = usuario.getAuthorities()
+//                    .stream()
+//                    .map(Perfil::getAuthority)
+//                    .toList();
+//
+//            Map<String, Object> enderecoMap = new HashMap<>();
+//            if (usuario.getEndereco() != null) {
+//                Endereco endereco = usuario.getEndereco();
+//                enderecoMap.put("logradouro", endereco.getLogradouro());
+//                enderecoMap.put("numero", endereco.getNumero());
+//                enderecoMap.put("bairro", endereco.getBairro());
+//                enderecoMap.put("cidade", endereco.getCidade());
+//                enderecoMap.put("uf", endereco.getUf());
+//                enderecoMap.put("cep", endereco.getCep());
+//                enderecoMap.put("complemento", endereco.getComplemento());
+//            } else {
+//                enderecoMap.put("mensagem", "Endereço não cadastrado");
+//            }
 
             return JWT.create()
                     .withIssuer("alexCosta")
-                    .withSubject(usuario.getEmail()) // Incluindo o email como subject
-                    .withClaim("perfis", perfis)
-                    .withClaim("nome", usuario.getNome())
-                    .withClaim("email", usuario.getEmail().toLowerCase())
-                    .withClaim("endereco", enderecoMap)
-                    .withClaim("telefone", usuario.getTelefone())
-                    .withClaim("dataNascimento", String.valueOf(usuario.getDataNascimento()))
-                    .withClaim("id", String.valueOf(usuario.getId()))
+                    .withSubject(String.valueOf(usuario.getId()))
+//                    .withClaim("perfis", perfis)
+//                    .withClaim("nome", usuario.getNome())
+//                    .withClaim("email", usuario.getEmail().toLowerCase())
+//                    .withClaim("endereco", enderecoMap)
+//                    .withClaim("telefone", usuario.getTelefone())
+//                    .withClaim("dataNascimento", String.valueOf(usuario.getDataNascimento()))
+//                    .withClaim("id", String.valueOf(usuario.getId()))
 
 
                     .withExpiresAt(dataExpiracao())

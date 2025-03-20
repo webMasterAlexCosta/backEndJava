@@ -5,6 +5,7 @@ import br.com.alexcosta.alexcosta.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.core.GrantedAuthority;
 
 import jakarta.validation.constraints.Email;
@@ -31,11 +32,15 @@ public class UserPerfilDTO {
     @Size(min = 11, max = 11, message = "O telefone precisa ter 11 caracteres")
     private String telefone;
 
+    @CPF
+    @Getter
+    private String cpf;
+
     @Getter
     private LocalDate dataNascimento;
 
     @Getter
-    private List<String> perfil= new ArrayList<>();
+    private List<String> perfis= new ArrayList<>();
 
    @Getter
    @NotNull(message = "Endereco não pode ser nulo")
@@ -48,9 +53,9 @@ public class UserPerfilDTO {
         this.telefone = user.getTelefone();
         this.dataNascimento = user.getDataNascimento();
         this.endereco = user.getEndereco();
-
+        this.cpf= user.getCpf();
         for(GrantedAuthority role: user.getAuthorities()){
-            perfil.add(role.getAuthority());
+            perfis.add(role.getAuthority());
         }
     }
 

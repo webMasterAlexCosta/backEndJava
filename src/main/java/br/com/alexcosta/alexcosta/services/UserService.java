@@ -61,7 +61,7 @@ public class UserService {
 
     private Map<String, String> codigosDeRecuperacao = new HashMap<>();
 
-   private final String urlServidor = "https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/api/";
+    private final String urlServidor = "https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/api/";
     private final String urlServicoEmail = "codigocadastro/verificarcadastro/";
 //  private final String urlServidor = "http://localhost:8080/api/";
     private final String urlServico = urlServidor + urlServicoEmail;
@@ -303,8 +303,8 @@ public class UserService {
         Endereco endereco = enderecoRepository.save(userCadastroDTO.getEndereco());
         user.setEndereco(endereco);
 
-        Perfil userPerfil = perfilRepository.findByAuthority("CLIENT")
-                .orElseThrow(() -> new RuntimeException("Perfil 'CLIENT' não cadastrado"));
+        Perfil userPerfil = perfilRepository.findByAuthority("CLIENTE")
+                .orElseThrow(() -> new RuntimeException("Perfil 'CLIENTE' não cadastrado"));
         user.getAuthorities().add(userPerfil);
 
         userRepository.save(user);

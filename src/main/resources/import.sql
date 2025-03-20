@@ -24,7 +24,7 @@
 --INSERT INTO tb_produto (nome, preco, descricao, img_url,quantidade) VALUES ('Bolsa Transversal Unissex Mizuno Streetbag',149.99,'Shoulder Bag em color block com compartimento principal e bolso frontal. Alças com mosquetão e ajustador ','https://mizunobr.vtexassets.com/arquivos/ids/244338-1600-1600?v=638478577363070000&width=1600&height=1600&aspect=true',1);
 --INSERT INTO tb_produto (nome, preco, descricao, img_url,quantidade) VALUES ('Mochila Unissex Mizuno Fun',99.9,'Mochila leve com dois compartimentos, construida com tecido resistente, é espaçosa e tem um amplo bolso principal. Bolso frontal com divisórias organizadoras. Alças acolchoadas. É ideal para o uso diário.','https://mizunobr.vtexassets.com/arquivos/ids/244130-1600-1600?v=638460472687830000&width=1600&height=1600&aspect=true',1);
 --
---INSERT INTO tb_perfil(authority) VALUES('CLIENT');
+--INSERT INTO tb_perfil(authority) VALUES('CLIENTE');
 --INSERT INTO tb_perfil(authority) VALUES('ADMIN');
 --
 --
