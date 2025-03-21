@@ -4,6 +4,8 @@ import br.com.alexcosta.alexcosta.dto.UserPerfilDTO;
 import br.com.alexcosta.alexcosta.entities.User;
 import br.com.alexcosta.alexcosta.dto.DadosAutenticacao;
 import br.com.alexcosta.alexcosta.security.DadosTokenJWT;
+import br.com.alexcosta.alexcosta.security.SecurityFilter;
+import br.com.alexcosta.alexcosta.services.TokenBlacklistService;
 import br.com.alexcosta.alexcosta.services.TokenServices;
 import br.com.alexcosta.alexcosta.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +41,16 @@ public class AutenticacaoController {
 
     @Autowired
     private UserService userService;
+
+    private final TokenBlacklistService blacklistService;
+
+    public AutenticacaoController(TokenBlacklistService blacklistService) {
+        this.blacklistService = blacklistService;
+    }
+
+
+    @Autowired
+    private SecurityFilter securityFilter;
 
     @PostMapping("/cliente")
     public ResponseEntity<Map<String, Object>> efetuarLogin(@RequestBody @Valid DadosAutenticacao dados) {
@@ -159,6 +171,15 @@ public class AutenticacaoController {
 
         return ResponseEntity.ok(new DadosTokenJWT(token));
     }
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        String token = securityFilter.recuperarTokenControler(request);
+        if (token != null) {
+            blacklistService.addToBlacklist(token);
+        }
+        return ResponseEntity.ok("Logout realizado com sucesso");
+    }
+
 
 
 

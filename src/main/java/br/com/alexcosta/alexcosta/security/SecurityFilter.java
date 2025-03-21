@@ -7,9 +7,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,32 +23,33 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
 
-    @Autowired
-    private TokenServices tokenServices;
-
-    @Autowired
-    private UserRepository repository;
+    private final TokenServices tokenServices;
+    private final UserRepository repository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
         if (isPublicRoute(request)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String tokenJWT = recuperarToken(request);
+        final String tokenJWT = recuperarToken(request);
 
         if (tokenJWT != null) {
             try {
-                String subject = tokenServices.getSubject(tokenJWT);  // Aqui, "subject" é o ID (UUID)
-                Optional<User> usuarioOpt = repository.findById(UUID.fromString(subject));
+                final String subject = tokenServices.getSubject(tokenJWT);
+                final Optional<User> usuarioOpt = repository.findById(UUID.fromString(subject));
 
                 if (usuarioOpt.isPresent()) {
                     User usuario = usuarioOpt.get();
+
                     List<SimpleGrantedAuthority> authorities = usuario.getAuthorities().stream()
                             .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
                             .collect(Collectors.toList());
@@ -77,8 +78,8 @@ public class SecurityFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicRoute(HttpServletRequest request) {
-        String uri = request.getRequestURI();
-        return uri.startsWith("/api/recuperacao/solicitar") ||
+        final String uri = request.getRequestURI();
+        return uri.matches("/api/recuperacao/solicitar") ||
                 uri.startsWith("/api/publico") ||
                 uri.startsWith("/api/usuarios/cadastro") ||
                 uri.startsWith("/api/login/cliente") ||
@@ -97,5 +98,10 @@ public class SecurityFilter extends OncePerRequestFilter {
                 .filter(header -> header.startsWith("Bearer "))
                 .map(header -> header.substring(7).trim())
                 .orElse(null);
+    }
+
+
+    public String recuperarTokenControler(HttpServletRequest request) {
+        return recuperarToken(request);
     }
 }

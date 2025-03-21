@@ -532,6 +532,12 @@ public class UserService {
     return user.getFoto();
     }
 
+    public String deleteFoto(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                user.setFoto(null);
+        return user.getFoto();
+    }
 }
 
 

@@ -63,6 +63,11 @@ public class UsuarioControle {
         String user = service.getFoto(id);
         return ResponseEntity.ok(user);
     }
+    @DeleteMapping("/{id}/foto")
+    private ResponseEntity<String>deleteFoto(@PathVariable UUID id){
+        String user = service.deleteFoto(id);
+        return ResponseEntity.ok(user);
+    }
 
     @PatchMapping("/{id}/senha")
     public ResponseEntity<String> updateSenha(@PathVariable UUID id, @RequestBody @Valid UpdateSenha dto) {
