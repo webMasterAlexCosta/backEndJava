@@ -62,9 +62,9 @@ public class UserService {
     private Map<String, String> codigosDeRecuperacao = new HashMap<>();
 
 
-    private final String urlServidor = "https://graci5546.c44.integrator.host/api/";
+   private final String urlServidor = "https://graci5546.c44.integrator.host/api/";
     private final String urlServicoEmail = "codigocadastro/verificarcadastro/";
- //   private final String urlServidor = "http://localhost:8080/api/";
+    //private final String urlServidor = "http://localhost:8080/api/";
     private final String urlServico = urlServidor + urlServicoEmail;
 
     @Transactional
