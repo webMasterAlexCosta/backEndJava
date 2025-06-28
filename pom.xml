@@ -10,10 +10,10 @@
 		<relativePath/>
 	</parent>
 	<groupId>br.com.alexcosta</groupId>
-	<artifactId>alexcosta</artifactId>
+	<artifactId>br.com.alexcosta</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>alexcosta</name>
-	<description>alexcosta</description>
+	<name>br.com.alexcosta</name>
+	<description>br.com.alexcosta</description>
 	<properties>
 		<java.version>21</java.version>
 	</properties>

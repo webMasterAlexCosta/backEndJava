@@ -8,6 +8,8 @@ import br.com.alexcosta.alexcosta.security.SecurityFilter;
 import br.com.alexcosta.alexcosta.services.TokenBlacklistService;
 import br.com.alexcosta.alexcosta.services.TokenServices;
 import br.com.alexcosta.alexcosta.services.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -152,7 +154,11 @@ public class AutenticacaoController {
    //aqui o formato é x-www-form
 
     @PostMapping("/cliente3")
-    public ResponseEntity<DadosTokenJWT> efetuarLogin3(@RequestParam String email, @RequestParam String senha) {
+    public ResponseEntity<DadosTokenJWT> efetuarLogin3(
+            @RequestParam String email,
+            @RequestParam String senha,
+            HttpServletResponse response // <-- recebe isso também
+    ) {
         var dados = new DadosAutenticacao(email, senha);
 
         var authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
@@ -169,16 +175,36 @@ public class AutenticacaoController {
 
         String token = tokenServices.gerarToken(user);
 
+        // CRIA O COOKIE
+        Cookie cookie = new Cookie("TOKEN_KEY", token);
+        cookie.setHttpOnly(true); // mais seguro, JS não acessa, mas front pode precisar em JS, então pode remover se necessário
+        cookie.setSecure(true); // true se for HTTPS, senão false para dev
+        cookie.setPath("/"); // acessível em todo o domínio
+        cookie.setMaxAge(7 * 24 * 60 * 60); // 7 dias
+
+        response.addCookie(cookie); // adiciona o cookie à resposta
+
+        // Opcional: ainda retorna no body para compatibilidade
         return ResponseEntity.ok(new DadosTokenJWT(token));
     }
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletRequest request) {
+    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
         String token = securityFilter.recuperarTokenControler(request);
         if (token != null) {
             blacklistService.addToBlacklist(token);
         }
+
+        // Expira o cookie
+        Cookie cookie = new Cookie("TOKEN_KEY", null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // expira imediatamente
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+
         return ResponseEntity.ok("Logout realizado com sucesso");
     }
+
 
 
 

@@ -28,35 +28,11 @@ public class TokenServices {
         try {
             Algorithm algoritmo = Algorithm.HMAC512(secret);
 
-//            List<String> perfis = usuario.getAuthorities()
-//                    .stream()
-//                    .map(Perfil::getAuthority)
-//                    .toList();
-//
-//            Map<String, Object> enderecoMap = new HashMap<>();
-//            if (usuario.getEndereco() != null) {
-//                Endereco endereco = usuario.getEndereco();
-//                enderecoMap.put("logradouro", endereco.getLogradouro());
-//                enderecoMap.put("numero", endereco.getNumero());
-//                enderecoMap.put("bairro", endereco.getBairro());
-//                enderecoMap.put("cidade", endereco.getCidade());
-//                enderecoMap.put("uf", endereco.getUf());
-//                enderecoMap.put("cep", endereco.getCep());
-//                enderecoMap.put("complemento", endereco.getComplemento());
-//            } else {
-//                enderecoMap.put("mensagem", "Endereço não cadastrado");
-//            }
+
 
             return JWT.create()
-                    .withIssuer("alexCosta")
+                    .withIssuer("br.com.alexcosta")
                     .withSubject(String.valueOf(usuario.getId()))
-//                    .withClaim("perfis", perfis)
-//                    .withClaim("nome", usuario.getNome())
-//                    .withClaim("email", usuario.getEmail().toLowerCase())
-//                    .withClaim("endereco", enderecoMap)
-//                    .withClaim("telefone", usuario.getTelefone())
-//                    .withClaim("dataNascimento", String.valueOf(usuario.getDataNascimento()))
-//                    .withClaim("id", String.valueOf(usuario.getId()))
 
 
                     .withExpiresAt(dataExpiracao())
@@ -72,11 +48,10 @@ public class TokenServices {
         try {
             var algoritmo = Algorithm.HMAC512(secret);
             var decodedJWT = JWT.require(algoritmo)
-                    .withIssuer("alexCosta")
+                    .withIssuer("br.com.alexcosta")
                     .build()
                     .verify(tokenJWT);
 
-            // Verificando se a data de expiração é null antes de comparar
             if (decodedJWT.getExpiresAt() != null && decodedJWT.getExpiresAt().getTime() < System.currentTimeMillis()) {
                 throw new RuntimeException("Token expirado");
             }
@@ -94,7 +69,7 @@ public class TokenServices {
         try {
             var algoritmo = Algorithm.HMAC512(secret);
             JWT.require(algoritmo)
-                    .withIssuer("alexcosta")
+                    .withIssuer("br.com.alexcosta")
                     .build()
                     .verify(tokenJWT);
             return true;
@@ -105,7 +80,7 @@ public class TokenServices {
 
     private Instant dataExpiracao() {
         return LocalDateTime.now()
-                .plusMinutes(60) // Pode ser parametrizado futuramente
+                .plusMinutes(1440)
                 .toInstant(ZoneOffset.of("-03:00"));
     }
 

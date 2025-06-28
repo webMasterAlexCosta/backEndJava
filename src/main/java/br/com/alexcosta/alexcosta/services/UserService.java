@@ -62,7 +62,7 @@ public class UserService {
     private Map<String, String> codigosDeRecuperacao = new HashMap<>();
 
 
-   private final String urlServidor = "https://graci5546.c44.integrator.host/api/";
+   private final String urlServidor = "http://alexc5595.c44.integrator.host/api/";
     private final String urlServicoEmail = "codigocadastro/verificarcadastro/";
     //private final String urlServidor = "http://localhost:8080/api/";
     private final String urlServico = urlServidor + urlServicoEmail;
@@ -207,7 +207,6 @@ public class UserService {
     }
 
     public String verificarCadastro(String uuid) {
-        // Validação do UUID
         if (uuid == null || uuid.length() != 36) {
             return "UUID inválido";
         }
@@ -215,7 +214,6 @@ public class UserService {
         try {
             UUID uuidParsed = UUID.fromString(uuid);
 
-            // Recupera o usuário verificando a existência do UUID
             Optional<UserVerificador> userVerificadorOptional = userVerificadorRepository.findByUuid(uuidParsed);
 
             if (userVerificadorOptional.isPresent()) {
@@ -223,23 +221,18 @@ public class UserService {
                 User user = usuarioVerificacao.getUser();
                 Instant agora = Instant.now();
 
-                // Verifica se a data de expiração não foi ultrapassada
                 if (usuarioVerificacao.getDataExpiracao().isAfter(agora)) {
-                    // Verifica a situação do usuário
                     if (user.isSituacao()) {
                         return "Usuário já cadastrado";
                     }
 
-                    // Ativa o usuário e persiste no banco
                     user.setSituacao(true);
                     userRepository.save(user);
 
                     return "Usuário verificado. Por favor, retorne ao site.";
                 } else {
-                    // Remove o registro expirado e cria um novo
                     userVerificadorRepository.delete(usuarioVerificacao);
 
-                    // Gera um novo UUID e uma nova data de expiração
                     UUID novoUuid = UUID.randomUUID();
                     Instant novaDataExpiracao = Instant.now().plus(2, ChronoUnit.MINUTES);
 
@@ -248,7 +241,6 @@ public class UserService {
                     novoUserVerificador.setDataExpiracao(novaDataExpiracao);
                     novoUserVerificador.setUser(user);
 
-                    // Salva o novo link de verificação
                     userVerificadorRepository.save(novoUserVerificador);
 
                     if(user.isSituacao()) {
@@ -283,7 +275,6 @@ public class UserService {
 
     @Transactional
     public UserCadastroDTO cadastro(@Valid UserCadastroDTO userCadastroDTO) {
-        // Verificar se já existe um usuário com o CPF, telefone ou e-mail fornecido
         if (userRepository.existsByCpf(userCadastroDTO.getCpf())) {
             throw new ControllerExceptionHandler.CpfAlreadyExistsException("Já existe um usuário cadastrado com este CPF.");
         }
@@ -296,7 +287,6 @@ public class UserService {
             throw new ControllerExceptionHandler.EmailAlreadyExistsException("Já existe um usuário cadastrado com este e-mail.");
         }
 
-        // Continuação do processo de cadastro...
         String encodedPassword = passwordEncoder.encode(userCadastroDTO.getSenha());
         User user = new User(userCadastroDTO);
         user.setSenha(encodedPassword);
@@ -310,10 +300,8 @@ public class UserService {
 
         userRepository.save(user);
 
-        // Criar e salvar o verificador de usuário
         UserVerificador userVerificador = criarUserVerificador(user);
 
-        // Enviar email de boas-vindas
         enviarEmailBoasVindas(user, userVerificador);
 
         return new UserCadastroDTO(user);
@@ -397,15 +385,12 @@ public class UserService {
     private void enviarNovoLink(String email, UUID novoUuid) {
 
         try {
-            // Gerar conteúdo HTML do e-mail
             String htmlContent = criarConteudoEmailDeRecuperacao(novoUuid);
 
-            // Criar o MimeMessage
             MimeMessage mimeMessage = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);  // Não é mais necessário try-with-resources
 
             try {
-                // Configurar e enviar o e-mail
                 helper.setTo(email);
                 helper.setSubject("Novo Link de Verificação");
                 helper.setText(htmlContent, true);  // O conteúdo HTML gerado é passado para o helper
@@ -468,7 +453,6 @@ public class UserService {
 
     @Transactional
     public void atualizarSenhaRecuperada(UUID userId, String novaSenha) {
-        // Valida se a nova senha possui pelo menos 8 caracteres
         if (novaSenha == null || novaSenha.length() < 8) {
             throw new IllegalArgumentException("A nova senha deve ter pelo menos 8 caracteres.");
         }
@@ -512,17 +496,13 @@ public class UserService {
 
     @Transactional
     public String updateFoto(UUID id, String foto) {
-        // Recupera o usuário pelo id
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        // Atualiza a URL da foto
-        user.setFoto(foto); // Supondo que você tenha um campo fotoPerfil no UserDTO e User
+        user.setFoto(foto);
 
-        // Salva a alteração no banco de dados
         userRepository.save(user);
 
-        // Retorna uma mensagem ou algum valor indicativo de sucesso
         return "Foto atualizada com sucesso";
     }
 
